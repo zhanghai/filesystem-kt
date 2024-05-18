@@ -17,11 +17,12 @@
 package me.zhanghai.kotlin.filesystem
 
 import kotlin.test.Test
-import kotlin.test.assertNotNull
+import kotlin.test.assertEquals
 
-class LinuxPlatformFileSystemTest {
+class PlatformFileSystemTest {
     @Test
-    fun `test platform file system not null`() {
-        assertNotNull(FileSystemRegistry.platformFileSystem)
+    fun testRegistered() {
+        val platformFileSystem = FileSystemRegistry.platformFileSystem ?: return
+        assertEquals(platformFileSystem, FileSystemRegistry.platformFileSystem)
     }
 }

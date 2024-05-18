@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-plugins {
-    `kotlin-dsl`
-}
+plugins { `kotlin-dsl` }
 
-dependencies {
-    implementation(libs.nexus.publish)
-}
+dependencies { implementation(libs.nexus.publish) }

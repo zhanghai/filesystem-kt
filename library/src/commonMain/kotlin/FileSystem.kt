@@ -16,13 +16,13 @@
 
 package me.zhanghai.kotlin.filesystem
 
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.io.IOException
 import kotlinx.io.bytestring.ByteString
 import me.zhanghai.kotlin.filesystem.io.AsyncSink
 import me.zhanghai.kotlin.filesystem.io.AsyncSource
 import me.zhanghai.kotlin.filesystem.io.use
 import me.zhanghai.kotlin.filesystem.io.withCloseable
-import kotlin.coroutines.cancellation.CancellationException
 
 public interface FileSystem {
     public val scheme: String

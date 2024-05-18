@@ -16,12 +16,16 @@
 
 package me.zhanghai.kotlin.filesystem
 
-import kotlin.test.Test
-import kotlin.test.assertNotNull
+public actual class FileTime(public val millis: Long, public val excessNanos: Long) :
+    Comparable<FileTime> {
+    public actual fun toMillis(): Long = millis
 
-class JvmPlatformFileSystemTest {
-    @Test
-    fun `test platform file system not null`() {
-        assertNotNull(FileSystemRegistry.platformFileSystem)
+    override fun compareTo(other: FileTime): Int {
+        millis.compareTo(other.millis).let {
+            if (it != 0) {
+                return it
+            }
+        }
+        return excessNanos.compareTo(other.excessNanos)
     }
 }

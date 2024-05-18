@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-plugins {
-    id("io.github.gradle-nexus.publish-plugin")
-}
+plugins { id("io.github.gradle-nexus.publish-plugin") }
 
 allprojects {
     group = "me.zhanghai.kotlin.filesystem"
@@ -26,7 +24,5 @@ allprojects {
 nexusPublishing {
     // Configure maven central repository
     // https://github.com/gradle-nexus/publish-plugin#publishing-to-maven-central-via-sonatype-ossrh
-    repositories {
-        sonatype()
-    }
+    repositories { sonatype() }
 }

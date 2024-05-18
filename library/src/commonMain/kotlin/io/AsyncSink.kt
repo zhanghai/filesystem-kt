@@ -16,9 +16,9 @@
 
 package me.zhanghai.kotlin.filesystem.io
 
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.io.Buffer
 import kotlinx.io.IOException
-import kotlin.coroutines.cancellation.CancellationException
 
 public interface AsyncSink : AsyncCloseable, AsyncFlushable {
     @Throws(CancellationException::class, IOException::class)

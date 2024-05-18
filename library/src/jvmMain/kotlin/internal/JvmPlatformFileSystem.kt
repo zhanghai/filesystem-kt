@@ -45,12 +45,6 @@ import java.nio.file.attribute.PosixFilePermission
 import java.nio.file.attribute.PosixFilePermissions
 
 internal class JvmPlatformFileSystem : PlatformFileSystem {
-    override fun getPath(platformPath: ByteString): Path =
-        Paths.get(platformPath.decodeToString()).toAbsolutePath().toPath()
-
-    override fun toPlatformPath(path: Path): ByteString =
-        path.toJavaPath().toString().encodeToByteString()
-
     override suspend fun getRealPath(path: Path): Path {
         val javaPath = path.toJavaPath()
         val javaRealPath = runInterruptible(Dispatchers.IO) { javaPath.toRealPath() }
@@ -136,6 +130,12 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
     }
 
     override suspend fun openFileStore(path: Path): FileStore = JvmFileStore(path)
+
+    override fun getPath(platformPath: ByteString): Path =
+        Paths.get(platformPath.decodeToString()).toAbsolutePath().toPath()
+
+    override fun toPlatformPath(path: Path): ByteString =
+        path.toJavaPath().toString().encodeToByteString()
 
     companion object {
         private fun Array<out CreateFileOption>.toJavaAttributes(): Array<FileAttribute<*>> =

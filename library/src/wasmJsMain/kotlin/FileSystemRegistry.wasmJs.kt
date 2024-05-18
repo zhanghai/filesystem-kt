@@ -16,12 +16,4 @@
 
 package me.zhanghai.kotlin.filesystem
 
-import kotlin.test.Test
-import kotlin.test.assertNotNull
-
-class LinuxPlatformFileSystemTest {
-    @Test
-    fun `test platform file system not null`() {
-        assertNotNull(FileSystemRegistry.platformFileSystem)
-    }
-}
+internal actual val platformFileSystem: PlatformFileSystem? = null

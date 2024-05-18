@@ -16,6 +16,14 @@
 
 package me.zhanghai.kotlin.filesystem.internal
 
+import java.io.InputStream
+import java.io.OutputStream
+import java.nio.ByteBuffer
+import java.nio.channels.FileChannel
+import java.nio.file.LinkOption as JavaLinkOption
+import java.nio.file.OpenOption
+import java.nio.file.StandardOpenOption
+import java.nio.file.attribute.FileAttribute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import kotlinx.io.Buffer
@@ -28,14 +36,6 @@ import me.zhanghai.kotlin.filesystem.FileContentOption
 import me.zhanghai.kotlin.filesystem.LinkOption
 import me.zhanghai.kotlin.filesystem.Path
 import me.zhanghai.kotlin.filesystem.internal.JvmPlatformFileSystem.Companion.toJavaAttribute
-import java.io.InputStream
-import java.io.OutputStream
-import java.nio.ByteBuffer
-import java.nio.channels.FileChannel
-import java.nio.file.OpenOption
-import java.nio.file.StandardOpenOption
-import java.nio.file.attribute.FileAttribute
-import java.nio.file.LinkOption as JavaLinkOption
 
 internal class JvmFileContent private constructor(private val fileChannel: FileChannel) :
     FileContent {

@@ -16,13 +16,13 @@
 
 package me.zhanghai.kotlin.filesystem
 
+import kotlin.concurrent.Volatile
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.io.Buffer
 import kotlinx.io.IOException
 import me.zhanghai.kotlin.filesystem.io.AsyncCloseable
 import me.zhanghai.kotlin.filesystem.io.AsyncSink
 import me.zhanghai.kotlin.filesystem.io.AsyncSource
-import kotlin.concurrent.Volatile
-import kotlin.coroutines.cancellation.CancellationException
 
 public interface FileContent : AsyncCloseable {
     @Throws(CancellationException::class, IOException::class)

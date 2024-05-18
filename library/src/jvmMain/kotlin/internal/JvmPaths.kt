@@ -16,14 +16,14 @@
 
 package me.zhanghai.kotlin.filesystem.internal
 
+import java.net.URI
+import java.nio.file.Path as JavaPath
+import java.nio.file.Paths
+import java.nio.file.spi.FileSystemProvider
 import kotlinx.io.bytestring.encodeToByteString
 import me.zhanghai.kotlin.filesystem.Path
 import me.zhanghai.kotlin.filesystem.PlatformFileSystem
 import me.zhanghai.kotlin.filesystem.Uri
-import java.net.URI
-import java.nio.file.Paths
-import java.nio.file.spi.FileSystemProvider
-import java.nio.file.Path as JavaPath
 
 internal fun JavaPath.toPath(): Path {
     require(isAbsolute) { "Path \"$this\" is not absolute" }
@@ -40,7 +40,8 @@ internal fun Path.toJavaPath(): JavaPath {
     require(scheme == PlatformFileSystem.SCHEME) {
         "Expecting path scheme \"${PlatformFileSystem.SCHEME}\" but found \"$scheme\""
     }
-    return Paths.get(URI(toUri().toString()))
+    return fileSystemTag as JavaPath?
+        ?: Paths.get(URI(toUri().toString())).also { fileSystemTag = it }
 }
 
 internal val JavaPath.provider: FileSystemProvider

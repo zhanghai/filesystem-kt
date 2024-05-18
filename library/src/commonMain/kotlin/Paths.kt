@@ -16,25 +16,25 @@
 
 package me.zhanghai.kotlin.filesystem
 
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.io.IOException
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.encodeToByteString
 import me.zhanghai.kotlin.filesystem.io.AsyncSink
 import me.zhanghai.kotlin.filesystem.io.AsyncSource
-import kotlin.coroutines.cancellation.CancellationException
 
-public inline fun Path.Companion.fromPlatformPath(platformPath: ByteString): Path =
-    FileSystemRegistry.platformFileSystem.getPath(platformPath)
+public fun Path.Companion.fromPlatformPath(platformPath: ByteString): Path =
+    FileSystemRegistry.requirePlatformFileSystem().getPath(platformPath)
 
-public inline fun Path.Companion.fromPlatformPath(platformPath: String): Path =
+public fun Path.Companion.fromPlatformPath(platformPath: String): Path =
     fromPlatformPath(platformPath.encodeToByteString())
 
-public inline fun Path.toPlatformPath(): ByteString =
-    FileSystemRegistry.platformFileSystem.toPlatformPath(this)
+public fun Path.toPlatformPath(): ByteString =
+    FileSystemRegistry.requirePlatformFileSystem().toPlatformPath(this)
 
-public inline fun Path.toPlatformPathString(): String = toPlatformPath().toString()
+public fun Path.toPlatformPathString(): String = toPlatformPath().toString()
 
-public inline fun Path.requireFileSystem(): FileSystem {
+public fun Path.requireFileSystem(): FileSystem {
     val fileSystem = FileSystemRegistry.getFileSystem(scheme)
     requireNotNull(fileSystem) { "No file system registered for scheme \"$scheme\"" }
     return fileSystem

@@ -16,12 +16,12 @@
 
 package me.zhanghai.kotlin.filesystem.internal
 
+import kotlin.experimental.and
+import kotlin.experimental.or
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.buildByteString
 import kotlinx.io.bytestring.decodeToString
 import me.zhanghai.kotlin.filesystem.Uri
-import kotlin.experimental.and
-import kotlin.experimental.or
 
 internal fun UriParser.parse(input: String): Uri {
     val listener = UriParserListener()
@@ -230,7 +230,7 @@ private fun encodePart(
     startIndex: Int = 0,
     endIndex: Int = decodedPart.size
 ): String = buildString {
-    for (i in startIndex ..< endIndex) {
+    for (i in startIndex..<endIndex) {
         val byte = decodedPart[i]
         val char = byte.toInt().toChar()
         if (charSet.matches(char)) {

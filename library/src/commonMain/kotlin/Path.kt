@@ -16,6 +16,8 @@
 
 package me.zhanghai.kotlin.filesystem
 
+import kotlin.concurrent.Volatile
+import kotlin.math.min
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.append
 import kotlinx.io.bytestring.buildByteString
@@ -24,15 +26,18 @@ import kotlinx.io.bytestring.isNotEmpty
 import me.zhanghai.kotlin.filesystem.internal.compareTo
 import me.zhanghai.kotlin.filesystem.internal.contains
 import me.zhanghai.kotlin.filesystem.internal.startsWith
-import kotlin.math.min
 
 public class Path private constructor(public val rootUri: Uri, public val names: List<ByteString>) :
     Comparable<Path> {
+    @Volatile public var fileSystemTag: Any? = null
+
     public val scheme: String
         get() = rootUri.scheme!!
 
     public val fileName: ByteString?
         get() = names.lastOrNull()
+
+    public fun getRoot(): Path = if (names.isEmpty()) this else Path(rootUri, emptyList())
 
     public fun getParent(): Path? {
         val lastIndex = names.lastIndex
@@ -108,10 +113,8 @@ public class Path private constructor(public val rootUri: Uri, public val names:
         return Path(rootUri, names.toMutableList().apply { set(lastIndex, fileName) })
     }
 
-    public fun relativize(other: Path): RelativePath? {
-        if (rootUri != other.rootUri) {
-            return null
-        }
+    public fun relativize(other: Path): RelativePath {
+        require(rootUri != other.rootUri) { "Cannot relativize paths with different root URIs " }
         if (names.isEmpty()) {
             return RelativePath(other.names)
         }

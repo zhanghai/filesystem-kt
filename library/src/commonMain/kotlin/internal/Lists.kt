@@ -22,7 +22,7 @@ internal fun <T : Comparable<T>> List<T>.compareTo(other: List<T>): Int {
     val size = size
     val otherSize = other.size
     val commonSize = min(size, otherSize)
-    for (i in 0 ..< commonSize) {
+    for (i in 0..<commonSize) {
         this[i].compareTo(other[i]).let {
             if (it != 0) {
                 return it

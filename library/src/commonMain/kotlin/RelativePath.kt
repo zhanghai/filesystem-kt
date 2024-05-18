@@ -16,6 +16,8 @@
 
 package me.zhanghai.kotlin.filesystem
 
+import kotlin.jvm.JvmInline
+import kotlin.math.min
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.append
 import kotlinx.io.bytestring.buildByteString
@@ -24,8 +26,6 @@ import me.zhanghai.kotlin.filesystem.internal.compareTo
 import me.zhanghai.kotlin.filesystem.internal.contains
 import me.zhanghai.kotlin.filesystem.internal.endsWith
 import me.zhanghai.kotlin.filesystem.internal.startsWith
-import kotlin.jvm.JvmInline
-import kotlin.math.min
 
 @JvmInline
 public value class RelativePath private constructor(public val names: List<ByteString>) :

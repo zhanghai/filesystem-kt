@@ -16,11 +16,11 @@
 
 package me.zhanghai.kotlin.filesystem.io
 
-import kotlinx.io.IOException
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 import kotlin.coroutines.cancellation.CancellationException
+import kotlinx.io.IOException
 
 public interface AsyncCloseable {
     @Throws(CancellationException::class, IOException::class) public suspend fun close()

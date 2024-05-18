@@ -18,7 +18,4 @@ package me.zhanghai.kotlin.filesystem
 
 import me.zhanghai.kotlin.filesystem.internal.JvmPlatformFileSystem
 
-private val jvmPlatformFileSystem = JvmPlatformFileSystem()
-
-public actual val FileSystemRegistry.platformFileSystem: PlatformFileSystem
-    get() = jvmPlatformFileSystem
+internal actual val platformFileSystem: PlatformFileSystem? = JvmPlatformFileSystem()

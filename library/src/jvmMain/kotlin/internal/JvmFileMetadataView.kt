@@ -16,6 +16,11 @@
 
 package me.zhanghai.kotlin.filesystem.internal
 
+import java.nio.file.Files
+import java.nio.file.LinkOption as JavaLinkOption
+import java.nio.file.Path as JavaPath
+import java.nio.file.attribute.BasicFileAttributeView
+import java.nio.file.attribute.BasicFileAttributes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import me.zhanghai.kotlin.filesystem.FileMetadata
@@ -25,11 +30,6 @@ import me.zhanghai.kotlin.filesystem.FileTime
 import me.zhanghai.kotlin.filesystem.FileType
 import me.zhanghai.kotlin.filesystem.LinkOption
 import me.zhanghai.kotlin.filesystem.Path
-import java.nio.file.Files
-import java.nio.file.attribute.BasicFileAttributeView
-import java.nio.file.attribute.BasicFileAttributes
-import java.nio.file.LinkOption as JavaLinkOption
-import java.nio.file.Path as JavaPath
 
 internal open class JvmFileMetadataView(file: JavaPath, vararg options: JavaLinkOption) :
     FileMetadataView {

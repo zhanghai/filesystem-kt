@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
+
 /*
  * Copyright 2024 Google LLC
  *
@@ -15,28 +17,20 @@
  */
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.android.library)
     id("module.publication")
 }
 
 kotlin {
     explicitApi()
 
-    targetHierarchy.default()
     jvm()
     androidTarget {
         publishLibraryVariants("release")
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "1.8"
-            }
-        }
+        compilations.all { kotlinOptions { jvmTarget = JavaVersion.VERSION_1_8.toString() } }
     }
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
-    linuxX64()
+    @OptIn(ExperimentalWasmDsl::class) wasmJs { browser() }
 
     sourceSets {
         val commonMain by getting {
@@ -45,18 +39,23 @@ kotlin {
                 api(libs.kotlinx.io.core)
             }
         }
-        val commonTest by getting {
-            dependencies {
-                implementation(libs.kotlin.test)
-            }
-        }
+        val commonTest by getting { dependencies { implementation(libs.kotlin.test) } }
+        val jvmMain by getting
+        val androidMain by getting { dependsOn(jvmMain) }
+        val nonJvmMain by creating { dependsOn(commonMain) }
+        val wasmJsMain by getting { dependsOn(nonJvmMain) }
     }
 }
 
 android {
     namespace = "me.zhanghai.kotlin.filesystem"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
+    defaultConfig { minSdk = libs.versions.android.minSdk.get().toInt() }
+    compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
+
+dependencies { coreLibraryDesugaring(libs.android.desugarJdkLibsNio) }

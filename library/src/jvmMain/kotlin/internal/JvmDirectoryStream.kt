@@ -16,6 +16,10 @@
 
 package me.zhanghai.kotlin.filesystem.internal
 
+import java.nio.file.DirectoryStream as JavaDirectoryStream
+import java.nio.file.Files
+import java.nio.file.LinkOption
+import java.nio.file.Path as JavaPath
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import kotlinx.io.bytestring.encodeToByteString
@@ -24,10 +28,6 @@ import me.zhanghai.kotlin.filesystem.DirectoryEntry
 import me.zhanghai.kotlin.filesystem.DirectoryStream
 import me.zhanghai.kotlin.filesystem.DirectoryStreamOption
 import me.zhanghai.kotlin.filesystem.Path
-import java.nio.file.Files
-import java.nio.file.LinkOption
-import java.nio.file.DirectoryStream as JavaDirectoryStream
-import java.nio.file.Path as JavaPath
 
 internal class JvmDirectoryStream
 private constructor(

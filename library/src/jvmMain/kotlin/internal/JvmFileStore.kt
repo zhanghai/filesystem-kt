@@ -16,6 +16,8 @@
 
 package me.zhanghai.kotlin.filesystem.internal
 
+import java.nio.file.FileStore as JavaFileStore
+import java.nio.file.Files
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import kotlinx.io.bytestring.ByteString
@@ -23,8 +25,6 @@ import kotlinx.io.bytestring.encodeToByteString
 import me.zhanghai.kotlin.filesystem.FileStore
 import me.zhanghai.kotlin.filesystem.FileStoreMetadata
 import me.zhanghai.kotlin.filesystem.Path
-import java.nio.file.Files
-import java.nio.file.FileStore as JavaFileStore
 
 internal class JvmFileStore private constructor(private val fileStore: JavaFileStore) : FileStore {
     override suspend fun readMetadata(): FileStoreMetadata {

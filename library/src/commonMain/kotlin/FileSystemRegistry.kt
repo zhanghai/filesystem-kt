@@ -16,18 +16,26 @@
 
 package me.zhanghai.kotlin.filesystem
 
-// TODO: Make thread safe
+import kotlin.concurrent.Volatile
+
 public object FileSystemRegistry {
-    private val fileSystems: MutableMap<String, FileSystem> = mutableMapOf()
+    @Volatile private var fileSystems: Map<String, FileSystem> = emptyMap()
 
     init {
-        fileSystems[platformFileSystem.scheme] = platformFileSystem
+        platformFileSystem?.let { addFileSystem(it) }
     }
 
-    public fun getFileSystems(): Map<String, FileSystem> = fileSystems.toMap()
+    public fun getFileSystems(): Map<String, FileSystem> = fileSystems
 
     public fun addFileSystem(fileSystem: FileSystem) {
-        fileSystems[fileSystem.scheme] = fileSystem
+        val scheme = fileSystem.scheme
+        if (scheme == PlatformFileSystem.SCHEME) {
+            require(fileSystem is PlatformFileSystem) {
+                "File system with scheme \"${PlatformFileSystem.SCHEME}\" must be a" +
+                    " ${PlatformFileSystem::class.simpleName}"
+            }
+        }
+        fileSystems += scheme to fileSystem
     }
 
     public fun getFileSystem(scheme: String): FileSystem? = fileSystems[scheme]
@@ -37,4 +45,10 @@ public object FileSystemRegistry {
     }
 }
 
-public expect val FileSystemRegistry.platformFileSystem: PlatformFileSystem
+internal expect val platformFileSystem: PlatformFileSystem?
+
+public val FileSystemRegistry.platformFileSystem: PlatformFileSystem?
+    get() = getFileSystem(PlatformFileSystem.SCHEME) as PlatformFileSystem?
+
+public fun FileSystemRegistry.requirePlatformFileSystem(): PlatformFileSystem =
+    requireNotNull(platformFileSystem) { "No platform file system registered" }

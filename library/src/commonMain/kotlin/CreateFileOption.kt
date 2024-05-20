@@ -16,4 +16,11 @@
 
 package me.zhanghai.kotlin.filesystem
 
+/**
+ * Options for creating a file.
+ *
+ * @see FileSystem.openContent
+ * @see FileSystem.createDirectory
+ * @see FileSystem.createSymbolicLink
+ */
 public interface CreateFileOption : FileContentOption

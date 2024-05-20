@@ -16,6 +16,12 @@
 
 package me.zhanghai.kotlin.filesystem.internal
 
+import java.nio.file.Path as JavaPath
+import java.nio.file.Files
+import java.nio.file.LinkOption
+import java.nio.file.Paths
+import java.nio.file.attribute.BasicFileAttributeView
+import java.nio.file.attribute.PosixFileAttributeView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import me.zhanghai.kotlin.filesystem.FileMetadataOption
@@ -26,12 +32,6 @@ import me.zhanghai.kotlin.filesystem.posix.PosixFileMetadata
 import me.zhanghai.kotlin.filesystem.posix.PosixFileMetadataView
 import me.zhanghai.kotlin.filesystem.posix.PosixFileType
 import me.zhanghai.kotlin.filesystem.posix.PosixModeBit
-import java.nio.file.Files
-import java.nio.file.LinkOption
-import java.nio.file.Paths
-import java.nio.file.attribute.BasicFileAttributeView
-import java.nio.file.attribute.PosixFileAttributeView
-import java.nio.file.Path as JavaPath
 
 internal class JvmPosixFileMetadataView(
     private val file: JavaPath,

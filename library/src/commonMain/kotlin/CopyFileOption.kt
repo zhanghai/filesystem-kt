@@ -16,4 +16,10 @@
 
 package me.zhanghai.kotlin.filesystem
 
+/**
+ * Options for copying or moving a file.
+ *
+ * @see FileSystem.copy
+ * @see FileSystem.move
+ */
 public interface CopyFileOption

@@ -16,11 +16,41 @@
 
 package me.zhanghai.kotlin.filesystem
 
+/**
+ * Basic options for opening content of a file.
+ *
+ * @see FileSystem.openContent
+ */
 public enum class BasicFileContentOption : FileContentOption {
+    /**
+     * Open for reading content of the file.
+     *
+     * This option is implied if none of [READ], [WRITE] or [APPEND] is specified.
+     */
     READ,
+
+    /** Open for writing content of the file. */
     WRITE,
+
+    /**
+     * Open for appending to content of the file.
+     *
+     * This option implies [WRITE] if neither [READ] nor [WRITE] is specified.
+     */
     APPEND,
+
+    /** Truncate the file content to empty if it exists and [WRITE] is specified or implied. */
     TRUNCATE_EXISTING,
+
+    /** Create the file if it doesn't exist and [WRITE] is specified or implied. */
     CREATE,
+
+    /**
+     * Create the file and fail if it already exists, if [WRITE] is specified or implied.
+     *
+     * Symbolic links are not followed and considered existent regardless of their targets.
+     *
+     * This option implies [CREATE].
+     */
     CREATE_NEW
 }

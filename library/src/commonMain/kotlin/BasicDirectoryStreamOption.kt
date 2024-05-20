@@ -16,7 +16,23 @@
 
 package me.zhanghai.kotlin.filesystem
 
+/**
+ * Basic options for opening a directory stream.
+ *
+ * @see FileSystem.openDirectoryStream
+ */
 public enum class BasicDirectoryStreamOption : DirectoryStreamOption {
+    /**
+     * Read type of the directory entry.
+     *
+     * @see DirectoryEntryWithType
+     */
     READ_TYPE,
+
+    /**
+     * Read metadata of the directory entry.
+     *
+     * @see DirectoryEntryWithMetadata
+     */
     READ_METADATA
 }

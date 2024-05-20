@@ -16,6 +16,13 @@
 
 package me.zhanghai.kotlin.filesystem.internal
 
+import java.nio.file.CopyOption
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
+import java.nio.file.attribute.FileAttribute
+import java.nio.file.attribute.PosixFilePermission
+import java.nio.file.attribute.PosixFilePermissions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import kotlinx.io.bytestring.ByteString
@@ -36,13 +43,6 @@ import me.zhanghai.kotlin.filesystem.Path
 import me.zhanghai.kotlin.filesystem.PlatformFileSystem
 import me.zhanghai.kotlin.filesystem.posix.PosixModeBit
 import me.zhanghai.kotlin.filesystem.posix.PosixModeOption
-import java.nio.file.CopyOption
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.nio.file.StandardCopyOption
-import java.nio.file.attribute.FileAttribute
-import java.nio.file.attribute.PosixFilePermission
-import java.nio.file.attribute.PosixFilePermissions
 
 internal class JvmPlatformFileSystem : PlatformFileSystem {
     override suspend fun getRealPath(path: Path): Path {

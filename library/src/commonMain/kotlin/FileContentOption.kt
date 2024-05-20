@@ -16,4 +16,9 @@
 
 package me.zhanghai.kotlin.filesystem
 
+/**
+ * Options for opening content of a file.
+ *
+ * @see FileSystem.openContent
+ */
 public interface FileContentOption

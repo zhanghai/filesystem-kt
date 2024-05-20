@@ -34,11 +34,7 @@ public fun Path.toPlatformPath(): ByteString =
 
 public fun Path.toPlatformPathString(): String = toPlatformPath().toString()
 
-public fun Path.requireFileSystem(): FileSystem {
-    val fileSystem = FileSystemRegistry.getFileSystem(scheme)
-    requireNotNull(fileSystem) { "No file system registered for scheme \"$scheme\"" }
-    return fileSystem
-}
+public fun Path.requireFileSystem(): FileSystem = FileSystemRegistry.requireFileSystem(scheme)
 
 @Throws(CancellationException::class, IOException::class)
 public suspend inline fun Path.toRealPath(): Path = requireFileSystem().getRealPath(this)

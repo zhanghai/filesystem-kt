@@ -12,6 +12,8 @@ This is not an officially supported Google product.
 
 WIP
 
+Watching files and walking file trees are still TBD.
+
 ## Integration
 
 WIP

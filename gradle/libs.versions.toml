@@ -3,6 +3,7 @@ android-buildTools = "8.4.0"
 android-compileSdk = "34"
 android-desugarJdkLibs = "2.0.4"
 android-minSdk = "21"
+dokka = "1.9.20"
 kotlin = "1.9.23"
 kotlinx-coroutines = "1.8.0"
 kotlinx-io = "0.3.2"
@@ -17,4 +18,5 @@ nexus-publish = { module = "io.github.gradle-nexus.publish-plugin:io.github.grad
 
 [plugins]
 android-library = { id = "com.android.library", version.ref = "android-buildTools" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

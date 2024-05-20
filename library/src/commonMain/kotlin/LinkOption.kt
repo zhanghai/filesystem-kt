@@ -16,6 +16,18 @@
 
 package me.zhanghai.kotlin.filesystem
 
+/**
+ * Options for handling a symbolic link.
+ *
+ * @see FileSystem.openContent
+ * @see FileSystem.openMetadataView
+ * @see FileSystem.readMetadata
+ */
 public enum class LinkOption : FileContentOption, FileMetadataOption {
+    /**
+     * Do not follow symbolic links.
+     *
+     * This option is ignored on file systems where symbolic links are not supported.
+     */
     NO_FOLLOW_LINKS
 }

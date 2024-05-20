@@ -16,8 +16,23 @@
 
 package me.zhanghai.kotlin.filesystem
 
+import kotlin.coroutines.cancellation.CancellationException
+import kotlinx.io.IOException
 import me.zhanghai.kotlin.filesystem.io.AsyncCloseable
 
+/**
+ * A stream of entries in a directory.
+ *
+ * @see FileSystem.openDirectoryStream
+ */
 public interface DirectoryStream : AsyncCloseable {
+    /**
+     * Read an entry from this directory stream.
+     *
+     * The special entries `.` and `..` are not returned by this method.
+     *
+     * @return a directory entry, or {@code null} if this directory stream has reached its end
+     */
+    @Throws(CancellationException::class, IOException::class)
     public suspend fun read(): DirectoryEntry?
 }

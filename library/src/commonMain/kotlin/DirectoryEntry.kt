@@ -18,6 +18,16 @@ package me.zhanghai.kotlin.filesystem
 
 import kotlinx.io.bytestring.ByteString
 
+/**
+ * A directory entry.
+ *
+ * @see DirectoryStream
+ */
 public interface DirectoryEntry {
+    /**
+     * The name of the file.
+     *
+     * @see Path.resolve
+     */
     public val name: ByteString
 }

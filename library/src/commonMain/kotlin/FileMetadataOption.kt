@@ -16,4 +16,10 @@
 
 package me.zhanghai.kotlin.filesystem
 
+/**
+ * Options for opening or reading metadata of a file.
+ *
+ * @see FileSystem.openMetadataView
+ * @see FileSystem.readMetadata
+ */
 public interface FileMetadataOption

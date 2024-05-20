@@ -16,8 +16,18 @@
 
 package me.zhanghai.kotlin.filesystem
 
+/**
+ * Access modes for checking the accessibility of a file.
+ *
+ * @see FileSystem.checkAccess
+ */
 public expect enum class AccessMode {
+    /** Check read access of the file. */
     READ,
+
+    /** Check read access of the file. */
     WRITE,
+
+    /** Check execute access of the file. */
     EXECUTE
 }

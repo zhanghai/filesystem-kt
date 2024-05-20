@@ -16,12 +16,29 @@
 
 package me.zhanghai.kotlin.filesystem
 
+/**
+ * A directory entry with additional file type information.
+ *
+ * @see DirectoryStream
+ * @see BasicDirectoryStreamOption.READ_TYPE
+ */
 public interface DirectoryEntryWithType : DirectoryEntry {
+    /** The type of the file, or `null` if it couldn't be read. */
     public val type: FileType?
 
+    /**
+     * The exception occurred when reading type of the file, or `null` when the type is successfully
+     * read.
+     */
     public val typeException: Throwable?
 }
 
+/**
+ * A directory entry with additional file metadata information.
+ *
+ * @see DirectoryStream
+ * @see BasicDirectoryStreamOption.READ_METADATA
+ */
 public interface DirectoryEntryWithMetadata : DirectoryEntryWithType {
     override val type: FileType?
         get() = metadata?.type
@@ -29,7 +46,12 @@ public interface DirectoryEntryWithMetadata : DirectoryEntryWithType {
     override val typeException: Throwable?
         get() = metadataException
 
+    /** The metadata of the file, or `null` if it couldn't be read. */
     public val metadata: FileMetadata?
 
+    /**
+     * The exception occurred when reading metadata of the file, or `null` when the metadata is
+     * successfully read.
+     */
     public val metadataException: Throwable?
 }

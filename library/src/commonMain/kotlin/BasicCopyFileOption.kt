@@ -16,8 +16,19 @@
 
 package me.zhanghai.kotlin.filesystem
 
+/**
+ * Basic options for copying or moving a file.
+ *
+ * @see FileSystem.copy
+ * @see FileSystem.move
+ */
 public enum class BasicCopyFileOption : CopyFileOption {
+    /** Replace the target file if it exists. */
     REPLACE_EXISTING,
+
+    /** Copy metadata to the target file. */
     COPY_METADATA,
+
+    /** Move the file as an atomic operation. */
     ATOMIC_MOVE
 }

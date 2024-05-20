@@ -17,5 +17,11 @@
 package me.zhanghai.kotlin.filesystem.posix
 
 import me.zhanghai.kotlin.filesystem.CreateFileOption
+import me.zhanghai.kotlin.filesystem.FileSystem
 
+/**
+ * Option for specifying the POSIX mode when creating a file.
+ *
+ * @see FileSystem.openContent
+ */
 public data class PosixModeOption(public val mode: Set<PosixModeBit>) : CreateFileOption

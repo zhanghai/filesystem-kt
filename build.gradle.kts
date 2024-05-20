@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinNativeCompile
 plugins {
     id("root.publication")
     alias(libs.plugins.android.library).apply(false)
+    alias(libs.plugins.dokka).apply(false)
     alias(libs.plugins.kotlin.multiplatform).apply(false)
 }
 

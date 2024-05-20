@@ -16,4 +16,10 @@
 
 package me.zhanghai.kotlin.filesystem
 
+/**
+ * Options for opening a directory stream.
+ *
+ * @see FileSystem.openDirectoryStream
+ * @see FileSystem.readDirectory
+ */
 public interface DirectoryStreamOption

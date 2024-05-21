@@ -20,7 +20,7 @@ WIP
 
 ```kotlin
 dependencies {
-    implementation("me.zhanghai.kotlin.filesystem:core:0.0.1")
+    implementation("me.zhanghai.kotlin.filesystem:filesystem:0.0.1")
 }
 ```
 

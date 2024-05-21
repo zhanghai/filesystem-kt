@@ -32,4 +32,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "filesystem-kt"
 
-include(":library")
+include(":filesystem")

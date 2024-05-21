@@ -1,6 +1,6 @@
 # filesystem-kt
 
-[![CI status](https://github.com/zhanghai/filesystem-kt/workflows/Java%20CI%20with%20Gradle/badge.svg)](https://github.com/zhanghai/filesystem-kt/actions) [![GitHub release](https://img.shields.io/github/v/release/zhanghai/filesystem-kt)](https://github.com/zhanghai/filesystem-kt/releases) [![License](https://img.shields.io/github/license/zhanghai/filesystem-kt?color=blue)](LICENSE)
+[![CI status](https://github.com/zhanghai/filesystem-kt/workflows/Java%20CI%20with%20Gradle/badge.svg)](https://github.com/zhanghai/filesystem-kt/actions) [![GitHub release](https://img.shields.io/github/v/release/zhanghai/filesystem-kt)](https://github.com/zhanghai/filesystem-kt/releases) [![License](https://img.shields.io/github/license/zhanghai/filesystem-kt?color=blue)](LICENSE) [![API reference](https://img.shields.io/badge/API_reference-KDoc-blue)](https://zhanghai.github.io/filesystem-kt/api)
 
 A multiplatform Kotlin library for accessing files and file systems.
 
@@ -13,6 +13,10 @@ This is not an officially supported Google product.
 WIP
 
 Watching files and walking file trees are still TBD.
+
+## Documentation
+
+See [API reference](https://zhanghai.github.io/filesystem-kt/api).
 
 ## Integration
 

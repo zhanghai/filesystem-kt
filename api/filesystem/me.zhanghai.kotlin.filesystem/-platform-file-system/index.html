@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>PlatformFileSystem</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+</head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+                    <a class="library-name--link" href="../../../index.html">
+                            filesystem
+                    </a>
+            </div>
+            <div class="library-version">
+0.0.1            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":filesystem:dokkaHtml/commonMain">common</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageIds="filesystem::me.zhanghai.kotlin.filesystem/PlatformFileSystem///PointingToDeclaration//577539357">
+  <div class="breadcrumbs"><a href="../../../index.html">filesystem</a><span class="delimiter">/</span><a href="../index.html">me.zhanghai.kotlin.filesystem</a><span class="delimiter">/</span><span class="current">PlatformFileSystem</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Platform</span><wbr></wbr><span>File</span><wbr></wbr><span><span>System</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">PlatformFileSystem</a> : <a href="../-file-system/index.html">FileSystem</a></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="-528923478%2FClasslikes%2F577539357" anchor-label="Companion" id="-528923478%2FClasslikes%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-companion/index.html"><span><span>Companion</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-528923478%2FClasslikes%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-companion/index.html">Companion</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="1226204114%2FProperties%2F577539357" anchor-label="scheme" id="1226204114%2FProperties%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="scheme.html"><span><span>scheme</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1226204114%2FProperties%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="scheme.html">scheme</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-1580412633%2FFunctions%2F577539357" anchor-label="checkAccess" id="-1580412633%2FFunctions%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-file-system/check-access.html"><span>check</span><wbr></wbr><span><span>Access</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1580412633%2FFunctions%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-file-system/check-access.html"><span class="token function">checkAccess</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="../-path/index.html">Path</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>modes<span class="token operator">: </span><a href="../-access-mode/index.html">AccessMode</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1677330673%2FFunctions%2F577539357" anchor-label="copy" id="1677330673%2FFunctions%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-file-system/copy.html"><span><span>copy</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1677330673%2FFunctions%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-file-system/copy.html"><span class="token function">copy</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">source<span class="token operator">: </span><a href="../-path/index.html">Path</a><span class="token punctuation">, </span></span><span class="parameter ">target<span class="token operator">: </span><a href="../-path/index.html">Path</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>options<span class="token operator">: </span><a href="../-copy-file-option/index.html">CopyFileOption</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1337695730%2FFunctions%2F577539357" anchor-label="createDirectory" id="1337695730%2FFunctions%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-file-system/create-directory.html"><span>create</span><wbr></wbr><span><span>Directory</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1337695730%2FFunctions%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-file-system/create-directory.html"><span class="token function">createDirectory</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">directory<span class="token operator">: </span><a href="../-path/index.html">Path</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>options<span class="token operator">: </span><a href="../-create-file-option/index.html">CreateFileOption</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-563556484%2FFunctions%2F577539357" anchor-label="createHardLink" id="-563556484%2FFunctions%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-file-system/create-hard-link.html"><span>create</span><wbr></wbr><span>Hard</span><wbr></wbr><span><span>Link</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-563556484%2FFunctions%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-file-system/create-hard-link.html"><span class="token function">createHardLink</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">link<span class="token operator">: </span><a href="../-path/index.html">Path</a><span class="token punctuation">, </span></span><span class="parameter ">existing<span class="token operator">: </span><a href="../-path/index.html">Path</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-981930829%2FFunctions%2F577539357" anchor-label="createSymbolicLink" id="-981930829%2FFunctions%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-file-system/create-symbolic-link.html"><span>create</span><wbr></wbr><span>Symbolic</span><wbr></wbr><span><span>Link</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-981930829%2FFunctions%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-file-system/create-symbolic-link.html"><span class="token function">createSymbolicLink</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">link<span class="token operator">: </span><a href="../-path/index.html">Path</a><span class="token punctuation">, </span></span><span class="parameter ">target<span class="token operator">: </span><span data-unresolved-link="kotlinx.io.bytestring/ByteString///PointingToDeclaration/">ByteString</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>options<span class="token operator">: </span><a href="../-create-file-option/index.html">CreateFileOption</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1907317398%2FFunctions%2F577539357" anchor-label="delete" id="-1907317398%2FFunctions%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-file-system/delete.html"><span><span>delete</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1907317398%2FFunctions%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-file-system/delete.html"><span class="token function">delete</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="../-path/index.html">Path</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-329069813%2FFunctions%2F577539357" anchor-label="getPath" id="-329069813%2FFunctions%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-path.html"><span>get</span><wbr></wbr><span><span>Path</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-329069813%2FFunctions%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-path.html"><span class="token function">getPath</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">platformPath<span class="token operator">: </span><span data-unresolved-link="kotlinx.io.bytestring/ByteString///PointingToDeclaration/">ByteString</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-path/index.html">Path</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="51602766%2FFunctions%2F577539357" anchor-label="getRealPath" id="51602766%2FFunctions%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-file-system/get-real-path.html"><span>get</span><wbr></wbr><span>Real</span><wbr></wbr><span><span>Path</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="51602766%2FFunctions%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-file-system/get-real-path.html"><span class="token function">getRealPath</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="../-path/index.html">Path</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-path/index.html">Path</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1923687321%2FFunctions%2F577539357" anchor-label="isSameFile" id="-1923687321%2FFunctions%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-file-system/is-same-file.html"><span>is</span><wbr></wbr><span>Same</span><wbr></wbr><span><span>File</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1923687321%2FFunctions%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-file-system/is-same-file.html"><span class="token function">isSameFile</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path1<span class="token operator">: </span><a href="../-path/index.html">Path</a><span class="token punctuation">, </span></span><span class="parameter ">path2<span class="token operator">: </span><a href="../-path/index.html">Path</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-89220075%2FFunctions%2F577539357" anchor-label="move" id="-89220075%2FFunctions%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-file-system/move.html"><span><span>move</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-89220075%2FFunctions%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-file-system/move.html"><span class="token function">move</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">source<span class="token operator">: </span><a href="../-path/index.html">Path</a><span class="token punctuation">, </span></span><span class="parameter ">target<span class="token operator">: </span><a href="../-path/index.html">Path</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>options<span class="token operator">: </span><a href="../-copy-file-option/index.html">CopyFileOption</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1506825975%2FFunctions%2F577539357" anchor-label="openContent" id="1506825975%2FFunctions%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-file-system/open-content.html"><span>open</span><wbr></wbr><span><span>Content</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1506825975%2FFunctions%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-file-system/open-content.html"><span class="token function">openContent</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">file<span class="token operator">: </span><a href="../-path/index.html">Path</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>options<span class="token operator">: </span><a href="../-file-content-option/index.html">FileContentOption</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-file-content/index.html">FileContent</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2011156755%2FFunctions%2F577539357" anchor-label="openDirectoryStream" id="2011156755%2FFunctions%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-file-system/open-directory-stream.html"><span>open</span><wbr></wbr><span>Directory</span><wbr></wbr><span><span>Stream</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2011156755%2FFunctions%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-file-system/open-directory-stream.html"><span class="token function">openDirectoryStream</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">directory<span class="token operator">: </span><a href="../-path/index.html">Path</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>options<span class="token operator">: </span><a href="../-directory-stream-option/index.html">DirectoryStreamOption</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-directory-stream/index.html">DirectoryStream</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1957135500%2FFunctions%2F577539357" anchor-label="openFileStore" id="1957135500%2FFunctions%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-file-system/open-file-store.html"><span>open</span><wbr></wbr><span>File</span><wbr></wbr><span><span>Store</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1957135500%2FFunctions%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-file-system/open-file-store.html"><span class="token function">openFileStore</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="../-path/index.html">Path</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-file-store/index.html">FileStore</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1713939268%2FFunctions%2F577539357" anchor-label="openMetadataView" id="1713939268%2FFunctions%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-file-system/open-metadata-view.html"><span>open</span><wbr></wbr><span>Metadata</span><wbr></wbr><span><span>View</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1713939268%2FFunctions%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-file-system/open-metadata-view.html"><span class="token function">openMetadataView</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">file<span class="token operator">: </span><a href="../-path/index.html">Path</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>options<span class="token operator">: </span><a href="../-file-metadata-option/index.html">FileMetadataOption</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-file-metadata-view/index.html">FileMetadataView</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1937807369%2FFunctions%2F577539357" anchor-label="openSink" id="-1937807369%2FFunctions%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-file-system/open-sink.html"><span>open</span><wbr></wbr><span><span>Sink</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1937807369%2FFunctions%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-file-system/open-sink.html"><span class="token function">openSink</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">file<span class="token operator">: </span><a href="../-path/index.html">Path</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>options<span class="token operator">: </span><a href="../-file-content-option/index.html">FileContentOption</a><span class="token operator"> = </span>OPEN_SINK_OPTIONS_DEFAULT</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../me.zhanghai.kotlin.filesystem.io/-async-sink/index.html">AsyncSink</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="219145263%2FFunctions%2F577539357" anchor-label="openSource" id="219145263%2FFunctions%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-file-system/open-source.html"><span>open</span><wbr></wbr><span><span>Source</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="219145263%2FFunctions%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-file-system/open-source.html"><span class="token function">openSource</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">file<span class="token operator">: </span><a href="../-path/index.html">Path</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>options<span class="token operator">: </span><a href="../-file-content-option/index.html">FileContentOption</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../me.zhanghai.kotlin.filesystem.io/-async-source/index.html">AsyncSource</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="30229375%2FFunctions%2F577539357" anchor-label="readDirectory" id="30229375%2FFunctions%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-file-system/read-directory.html"><span>read</span><wbr></wbr><span><span>Directory</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="30229375%2FFunctions%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-file-system/read-directory.html"><span class="token function">readDirectory</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">directory<span class="token operator">: </span><a href="../-path/index.html">Path</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>options<span class="token operator">: </span><a href="../-directory-stream-option/index.html">DirectoryStreamOption</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../-path/index.html">Path</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="290833931%2FFunctions%2F577539357" anchor-label="readMetadata" id="290833931%2FFunctions%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-file-system/read-metadata.html"><span>read</span><wbr></wbr><span><span>Metadata</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="290833931%2FFunctions%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-file-system/read-metadata.html"><span class="token function">readMetadata</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">file<span class="token operator">: </span><a href="../-path/index.html">Path</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>options<span class="token operator">: </span><a href="../-file-metadata-option/index.html">FileMetadataOption</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-file-metadata/index.html">FileMetadata</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-627112077%2FFunctions%2F577539357" anchor-label="readSymbolicLink" id="-627112077%2FFunctions%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../-file-system/read-symbolic-link.html"><span>read</span><wbr></wbr><span>Symbolic</span><wbr></wbr><span><span>Link</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-627112077%2FFunctions%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-file-system/read-symbolic-link.html"><span class="token function">readSymbolicLink</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">link<span class="token operator">: </span><a href="../-path/index.html">Path</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.io.bytestring/ByteString///PointingToDeclaration/">ByteString</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="444451797%2FFunctions%2F577539357" anchor-label="toPlatformPath" id="444451797%2FFunctions%2F577539357" data-filterable-set=":filesystem:dokkaHtml/commonMain"></a>
+          <div class="table-row" data-filterable-current=":filesystem:dokkaHtml/commonMain" data-filterable-set=":filesystem:dokkaHtml/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="to-platform-path.html"><span>to</span><wbr></wbr><span>Platform</span><wbr></wbr><span><span>Path</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="444451797%2FFunctions%2F577539357"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":filesystem:dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="to-platform-path.html"><span class="token function">toPlatformPath</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">path<span class="token operator">: </span><a href="../-path/index.html">Path</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.io.bytestring/ByteString///PointingToDeclaration/">ByteString</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span
+                class="pull-right"><span>Generated by </span><a
+                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

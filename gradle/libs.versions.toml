@@ -1,11 +1,11 @@
 [versions]
-android-buildTools = "8.4.0"
+android-buildTools = "8.4.1"
 android-compileSdk = "34"
 android-desugarJdkLibs = "2.0.4"
 android-minSdk = "21"
 dokka = "1.9.20"
-kotlin = "1.9.23"
-kotlinx-coroutines = "1.8.0"
+kotlin = "2.0.0"
+kotlinx-coroutines = "1.8.1"
 kotlinx-io = "0.3.2"
 nexus-publish = "2.0.0-rc-1"
 

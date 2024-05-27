@@ -225,7 +225,7 @@ private constructor(
     }
 
     /**
-     * Get a bye string representing this relative path.
+     * Get a byte string representing this relative path.
      *
      * The byte string is created by joining the list of names of this relative path with the URI
      * path separator `/`.

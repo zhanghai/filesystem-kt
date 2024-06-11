@@ -1,5 +1,5 @@
 [versions]
-android-buildTools = "8.4.1"
+android-buildTools = "8.4.2"
 android-compileSdk = "34"
 android-desugarJdkLibs = "2.0.4"
 android-minSdk = "21"

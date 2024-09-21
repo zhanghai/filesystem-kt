@@ -1,4 +1,6 @@
-import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 /*
  * Copyright 2024 Google LLC
@@ -29,7 +31,8 @@ kotlin {
     jvm()
     androidTarget {
         publishLibraryVariants("release")
-        compilations.all { kotlinOptions { jvmTarget = JavaVersion.VERSION_1_8.toString() } }
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        compilerOptions { jvmTarget = JvmTarget.JVM_1_8 }
     }
     @OptIn(ExperimentalWasmDsl::class) wasmJs { browser() }
 
@@ -41,10 +44,11 @@ kotlin {
             }
         }
         val commonTest by getting { dependencies { implementation(libs.kotlin.test) } }
-        val jvmMain by getting
-        val androidMain by getting { dependsOn(jvmMain) }
-        val nonJvmMain by creating { dependsOn(commonMain) }
-        val wasmJsMain by getting { dependsOn(nonJvmMain) }
+        val jvmCommonMain by creating { dependsOn(commonMain) }
+        val jvmMain by getting { dependsOn(jvmCommonMain) }
+        val androidMain by getting { dependsOn(jvmCommonMain) }
+        val nonJvmCommonMain by creating { dependsOn(commonMain) }
+        val wasmJsMain by getting { dependsOn(nonJvmCommonMain) }
     }
 }
 

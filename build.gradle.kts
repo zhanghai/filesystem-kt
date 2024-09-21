@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.gradle.tasks.KotlinNativeCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     id("root.publication")
@@ -26,23 +24,11 @@ plugins {
 }
 
 subprojects {
-    tasks.withType<KotlinCompile>().configureEach {
-        kotlinOptions {
+    tasks.withType<KotlinCompilationTask<*>>().configureEach {
+        compilerOptions {
             allWarningsAsErrors = true
-            freeCompilerArgs += "-Xjvm-default=all"
-            freeCompilerArgs += "-Xexpect-actual-classes"
-        }
-    }
-    tasks.withType<KotlinJsCompile>().configureEach {
-        kotlinOptions {
-            allWarningsAsErrors = true
-            freeCompilerArgs += "-Xexpect-actual-classes"
-        }
-    }
-    tasks.withType<KotlinNativeCompile>().configureEach {
-        kotlinOptions {
-            allWarningsAsErrors = true
-            freeCompilerArgs += "-Xexpect-actual-classes"
+            freeCompilerArgs.add("-Xjvm-default=all")
+            freeCompilerArgs.add("-Xexpect-actual-classes")
         }
     }
 }

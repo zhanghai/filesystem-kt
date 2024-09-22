@@ -54,12 +54,12 @@ public suspend inline fun Path.isAccessible(vararg modes: AccessMode): Boolean =
     }
 
 @Throws(CancellationException::class)
-public suspend inline fun Path.exists(noFollowLinks: Boolean = false): Boolean =
+public suspend inline fun Path.exists(followLinks: Boolean = true): Boolean =
     try {
-        if (noFollowLinks) {
-            readMetadata(LinkOption.NO_FOLLOW_LINKS)
-        } else {
+        if (followLinks) {
             checkAccess()
+        } else {
+            readMetadata(LinkOption.NO_FOLLOW_LINKS)
         }
         true
     } catch (e: IOException) {
@@ -67,12 +67,12 @@ public suspend inline fun Path.exists(noFollowLinks: Boolean = false): Boolean =
     }
 
 @Throws(CancellationException::class)
-public suspend inline fun Path.notExists(noFollowLinks: Boolean = false): Boolean =
+public suspend inline fun Path.notExists(followLinks: Boolean = true): Boolean =
     try {
-        if (noFollowLinks) {
-            readMetadata(LinkOption.NO_FOLLOW_LINKS)
-        } else {
+        if (followLinks) {
             checkAccess()
+        } else {
+            readMetadata(LinkOption.NO_FOLLOW_LINKS)
         }
         false
     } catch (e: NoSuchFileException) {

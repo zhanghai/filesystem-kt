@@ -16,11 +16,11 @@
 
 package me.zhanghai.kotlin.filesystem.internal
 
-import java.nio.file.LinkOption as JavaLinkOption
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
+import java.nio.file.LinkOption as JavaLinkOption
 import java.nio.file.OpenOption
 import java.nio.file.StandardOpenOption
 import java.nio.file.attribute.FileAttribute

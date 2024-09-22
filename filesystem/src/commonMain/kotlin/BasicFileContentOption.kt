@@ -52,5 +52,5 @@ public enum class BasicFileContentOption : FileContentOption {
      *
      * This option implies [CREATE].
      */
-    CREATE_NEW
+    CREATE_NEW,
 }

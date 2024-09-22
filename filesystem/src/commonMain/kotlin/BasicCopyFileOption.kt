@@ -30,5 +30,5 @@ public enum class BasicCopyFileOption : CopyFileOption {
     COPY_METADATA,
 
     /** Move the file as an atomic operation. */
-    ATOMIC_MOVE
+    ATOMIC_MOVE,
 }

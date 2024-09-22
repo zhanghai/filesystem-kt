@@ -43,7 +43,7 @@ internal constructor(
     public val encodedPath: String,
     public val encodedQuery: String?,
     public val encodedFragment: String?,
-    @Suppress("UNUSED_PARAMETER") any: Any?
+    @Suppress("UNUSED_PARAMETER") any: Any?,
 ) : Comparable<Uri> {
     public val encodedAuthority: String? by
         lazy(LazyThreadSafetyMode.NONE) {
@@ -91,7 +91,7 @@ internal constructor(
         port: Int? = this.port,
         encodedPath: String = this.encodedPath,
         encodedQuery: String? = this.encodedQuery,
-        encodedFragment: String? = this.encodedFragment
+        encodedFragment: String? = this.encodedFragment,
     ): Uri {
         if (scheme !== this.scheme) {
             UriParser.requireValidScheme(scheme)
@@ -120,7 +120,7 @@ internal constructor(
             encodedPath,
             encodedQuery,
             encodedFragment,
-            null
+            null,
         )
     }
 
@@ -131,7 +131,7 @@ internal constructor(
         port: Int? = this.port,
         decodedPath: ByteString = BYTE_STRING_COPY,
         decodedQuery: ByteString? = BYTE_STRING_COPY,
-        decodedFragment: ByteString? = BYTE_STRING_COPY
+        decodedFragment: ByteString? = BYTE_STRING_COPY,
     ): Uri {
         if (scheme !== this.scheme) {
             UriParser.requireValidScheme(scheme)
@@ -177,7 +177,7 @@ internal constructor(
             encodedPath,
             encodedQuery,
             encodedFragment,
-            null
+            null,
         )
     }
 
@@ -237,7 +237,7 @@ internal constructor(
             port: Int? = null,
             encodedPath: String = "",
             encodedQuery: String? = null,
-            encodedFragment: String? = null
+            encodedFragment: String? = null,
         ): Uri {
             UriParser.requireValidScheme(scheme)
             UriParser.requireValidEncodedUserInfo(encodedUserInfo)
@@ -254,7 +254,7 @@ internal constructor(
                 encodedPath,
                 encodedQuery,
                 encodedFragment,
-                null
+                null,
             )
         }
 
@@ -265,7 +265,7 @@ internal constructor(
             port: Int? = null,
             decodedPath: ByteString = BYTE_STRING_EMPTY,
             decodedQuery: ByteString? = null,
-            decodedFragment: ByteString? = null
+            decodedFragment: ByteString? = null,
         ): Uri {
             UriParser.requireValidScheme(scheme)
             val encodedUserInfo = decodedUserInfo?.let { UriParser.encodeUserInfo(it) }
@@ -285,7 +285,7 @@ internal constructor(
                 encodedPath,
                 encodedQuery,
                 encodedFragment,
-                null
+                null,
             )
         }
 

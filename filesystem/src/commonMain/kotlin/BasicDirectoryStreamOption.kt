@@ -34,5 +34,5 @@ public enum class BasicDirectoryStreamOption : DirectoryStreamOption {
      *
      * @see DirectoryEntryWithMetadata
      */
-    READ_METADATA
+    READ_METADATA,
 }

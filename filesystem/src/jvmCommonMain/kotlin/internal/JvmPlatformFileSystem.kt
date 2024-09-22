@@ -58,7 +58,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
 
     override suspend fun openMetadataView(
         file: Path,
-        vararg options: FileMetadataOption
+        vararg options: FileMetadataOption,
     ): FileMetadataView =
         when {
             JvmPosixFileMetadataView.isSupported -> JvmPosixFileMetadataView(file, *options)
@@ -70,7 +70,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
 
     override suspend fun openDirectoryStream(
         directory: Path,
-        vararg options: DirectoryStreamOption
+        vararg options: DirectoryStreamOption,
     ): DirectoryStream = JvmDirectoryStream(directory, *options)
 
     override suspend fun createDirectory(directory: Path, vararg options: CreateFileOption) {
@@ -88,7 +88,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
     override suspend fun createSymbolicLink(
         link: Path,
         target: ByteString,
-        vararg options: CreateFileOption
+        vararg options: CreateFileOption,
     ) {
         val javaLink = link.toJavaPath()
         val javaTarget = Paths.get(target.decodeToString())

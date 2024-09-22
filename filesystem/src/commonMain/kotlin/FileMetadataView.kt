@@ -24,6 +24,6 @@ public interface FileMetadataView : AsyncCloseable {
     public suspend fun setTimes(
         lastModificationTime: FileTime? = null,
         lastAccessTime: FileTime? = null,
-        creationTime: FileTime? = null
+        creationTime: FileTime? = null,
     )
 }

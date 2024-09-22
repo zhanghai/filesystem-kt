@@ -58,5 +58,5 @@ internal class JvmFileStoreMetadata(
     override val blockSize: Long,
     override val totalSpace: Long,
     override val freeSpace: Long,
-    override val availableSpace: Long
+    override val availableSpace: Long,
 ) : FileStoreMetadata

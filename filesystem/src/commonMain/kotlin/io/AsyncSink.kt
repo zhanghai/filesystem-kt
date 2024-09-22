@@ -30,7 +30,7 @@ internal fun AsyncSink.withCloseable(closeable: AsyncCloseable): AsyncSink =
 
 private class CloseableAsyncSink(
     private val sink: AsyncSink,
-    private val closeable: AsyncCloseable
+    private val closeable: AsyncCloseable,
 ) : AsyncSink {
     override suspend fun write(source: Buffer, byteCount: Long) {
         sink.write(source, byteCount)

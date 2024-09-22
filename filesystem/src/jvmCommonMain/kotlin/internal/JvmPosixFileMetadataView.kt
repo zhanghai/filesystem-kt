@@ -16,9 +16,9 @@
 
 package me.zhanghai.kotlin.filesystem.internal
 
-import java.nio.file.Path as JavaPath
 import java.nio.file.Files
 import java.nio.file.LinkOption
+import java.nio.file.Path as JavaPath
 import java.nio.file.Paths
 import java.nio.file.attribute.BasicFileAttributeView
 import java.nio.file.attribute.PosixFileAttributeView
@@ -35,11 +35,11 @@ import me.zhanghai.kotlin.filesystem.posix.PosixModeBit
 
 internal class JvmPosixFileMetadataView(
     private val file: JavaPath,
-    private vararg val options: LinkOption
+    private vararg val options: LinkOption,
 ) : PosixFileMetadataView {
     constructor(
         file: Path,
-        vararg options: FileMetadataOption
+        vararg options: FileMetadataOption,
     ) : this(file.toJavaPath(), *options.toJavaOptions())
 
     override suspend fun readMetadata(): PosixFileMetadata {
@@ -123,14 +123,14 @@ internal class JvmPosixFileMetadataView(
             userId,
             groupId,
             mode,
-            lastStatusChangeTime
+            lastStatusChangeTime,
         )
     }
 
     override suspend fun setTimes(
         lastModificationTime: FileTime?,
         lastAccessTime: FileTime?,
-        creationTime: FileTime?
+        creationTime: FileTime?,
     ) {
         val attributeView =
             Files.getFileAttributeView(file, BasicFileAttributeView::class.java, *options)
@@ -225,7 +225,7 @@ internal class JvmPosixFileMetadataView(
                     Files.getFileAttributeView(
                         Paths.get("."),
                         PosixFileAttributeView::class.java,
-                        LinkOption.NOFOLLOW_LINKS
+                        LinkOption.NOFOLLOW_LINKS,
                     )
                     true
                 } catch (t: Throwable) {
@@ -245,5 +245,5 @@ internal class JvmPosixFileMetadata(
     override val userId: Int,
     override val groupId: Int,
     override val mode: Set<PosixModeBit>,
-    val lastStatusChangeTime: FileTime?
+    val lastStatusChangeTime: FileTime?,
 ) : PosixFileMetadata

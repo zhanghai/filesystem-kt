@@ -29,5 +29,5 @@ public expect enum class AccessMode {
     WRITE,
 
     /** Check execute access of the file. */
-    EXECUTE
+    EXECUTE,
 }

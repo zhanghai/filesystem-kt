@@ -51,7 +51,7 @@ private constructor(
     public val rootUri: Uri,
 
     /** The list of names of this path. */
-    public val names: List<ByteString>
+    public val names: List<ByteString>,
 ) : Comparable<Path> {
     /**
      * A tag for use by the implementation of the file system identified by this path.

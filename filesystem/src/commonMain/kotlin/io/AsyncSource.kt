@@ -30,7 +30,7 @@ internal fun AsyncSource.withCloseable(closeable: AsyncCloseable): AsyncSource =
 
 private class CloseableAsyncSource(
     private val source: AsyncSource,
-    private val closeable: AsyncCloseable
+    private val closeable: AsyncCloseable,
 ) : AsyncSource {
     override suspend fun readAtMostTo(sink: Buffer, byteCount: Long): Long =
         source.readAtMostTo(sink, byteCount)

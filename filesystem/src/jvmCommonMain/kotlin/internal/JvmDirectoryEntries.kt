@@ -23,5 +23,5 @@ import me.zhanghai.kotlin.filesystem.FileMetadata
 internal class JvmDirectoryEntryWithMetadata(
     override val name: ByteString,
     override val metadata: FileMetadata?,
-    override val metadataException: Throwable?
+    override val metadataException: Throwable?,
 ) : DirectoryEntryWithMetadata

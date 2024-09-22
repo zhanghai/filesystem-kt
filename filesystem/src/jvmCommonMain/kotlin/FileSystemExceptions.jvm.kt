@@ -22,7 +22,7 @@ public actual fun AccessDeniedException(
     file: String?,
     otherFile: String?,
     reason: String?,
-    cause: Throwable?
+    cause: Throwable?,
 ): AccessDeniedException =
     AccessDeniedException(file, otherFile, reason).apply { cause?.let { initCause(it) } }
 
@@ -33,7 +33,7 @@ public actual fun AtomicMoveNotSupportedException(
     source: String?,
     target: String?,
     reason: String?,
-    cause: Throwable?
+    cause: Throwable?,
 ): AtomicMoveNotSupportedException =
     AtomicMoveNotSupportedException(source, target, reason).apply { cause?.let { initCause(it) } }
 
@@ -43,7 +43,7 @@ public actual typealias DirectoryNotEmptyException = java.nio.file.DirectoryNotE
 public actual fun DirectoryNotEmptyException(
     directory: String?,
     reason: String?,
-    cause: Throwable?
+    cause: Throwable?,
 ): DirectoryNotEmptyException =
     DirectoryNotEmptyException(directory).apply { cause?.let { initCause(it) } }
 
@@ -53,7 +53,7 @@ public actual fun FileAlreadyExistsException(
     file: String?,
     otherFile: String?,
     reason: String?,
-    cause: Throwable?
+    cause: Throwable?,
 ): FileAlreadyExistsException =
     FileAlreadyExistsException(file, otherFile, reason).apply { cause?.let { initCause(it) } }
 
@@ -63,7 +63,7 @@ public actual typealias FileSystemLoopException = java.nio.file.FileSystemLoopEx
 public actual fun FileSystemLoopException(
     file: String?,
     reason: String?,
-    cause: Throwable?
+    cause: Throwable?,
 ): FileSystemLoopException = FileSystemLoopException(file).apply { cause?.let { initCause(it) } }
 
 public actual typealias NoSuchFileException = java.nio.file.NoSuchFileException
@@ -72,7 +72,7 @@ public actual fun NoSuchFileException(
     file: String?,
     otherFile: String?,
     reason: String?,
-    cause: Throwable?
+    cause: Throwable?,
 ): NoSuchFileException =
     NoSuchFileException(file, otherFile, reason).apply { cause?.let { initCause(it) } }
 
@@ -82,7 +82,7 @@ public actual typealias NotDirectoryException = java.nio.file.NotDirectoryExcept
 public actual fun NotDirectoryException(
     file: String?,
     reason: String?,
-    cause: Throwable?
+    cause: Throwable?,
 ): NotDirectoryException = NotDirectoryException(file).apply { cause?.let { initCause(it) } }
 
 public actual typealias NotLinkException = java.nio.file.NotLinkException
@@ -91,6 +91,6 @@ public actual fun NotLinkException(
     file: String?,
     otherFile: String?,
     reason: String?,
-    cause: Throwable?
+    cause: Throwable?,
 ): NotLinkException =
     NotLinkException(file, otherFile, reason).apply { cause?.let { initCause(it) } }

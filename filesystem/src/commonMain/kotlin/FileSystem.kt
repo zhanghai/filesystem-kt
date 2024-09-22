@@ -36,7 +36,7 @@ public interface FileSystem {
     @Throws(CancellationException::class, IOException::class)
     public suspend fun openMetadataView(
         file: Path,
-        vararg options: FileMetadataOption
+        vararg options: FileMetadataOption,
     ): FileMetadataView
 
     @Throws(CancellationException::class, IOException::class)
@@ -56,7 +56,7 @@ public interface FileSystem {
     @Throws(CancellationException::class, IOException::class)
     public suspend fun openSink(
         file: Path,
-        vararg options: FileContentOption = OPEN_SINK_OPTIONS_DEFAULT
+        vararg options: FileContentOption = OPEN_SINK_OPTIONS_DEFAULT,
     ): AsyncSink {
         require(BasicFileContentOption.READ !in options) { BasicFileContentOption.READ }
         require(
@@ -70,13 +70,13 @@ public interface FileSystem {
     @Throws(CancellationException::class, IOException::class)
     public suspend fun openDirectoryStream(
         directory: Path,
-        vararg options: DirectoryStreamOption
+        vararg options: DirectoryStreamOption,
     ): DirectoryStream
 
     @Throws(CancellationException::class, IOException::class)
     public suspend fun readDirectory(
         directory: Path,
-        vararg options: DirectoryStreamOption
+        vararg options: DirectoryStreamOption,
     ): List<Path> =
         openDirectoryStream(directory, *options).use { directoryStream ->
             buildList {
@@ -97,7 +97,7 @@ public interface FileSystem {
     public suspend fun createSymbolicLink(
         link: Path,
         target: ByteString,
-        vararg options: CreateFileOption
+        vararg options: CreateFileOption,
     )
 
     @Throws(CancellationException::class, IOException::class)
@@ -123,7 +123,7 @@ public interface FileSystem {
             arrayOf(
                 BasicFileContentOption.WRITE,
                 BasicFileContentOption.TRUNCATE_EXISTING,
-                BasicFileContentOption.CREATE
+                BasicFileContentOption.CREATE,
             )
     }
 }

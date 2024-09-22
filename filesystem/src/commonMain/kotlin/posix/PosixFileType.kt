@@ -26,7 +26,7 @@ public enum class PosixFileType {
     FIFO,
     SYMBOLIC_LINK,
     SOCKET,
-    OTHER
+    OTHER,
 }
 
 public fun PosixFileType.toFileType(): FileType =

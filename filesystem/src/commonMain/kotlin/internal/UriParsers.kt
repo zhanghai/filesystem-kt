@@ -111,7 +111,7 @@ private class UriParserListener : UriParser.Listener {
             encodedPath!!,
             encodedQuery,
             encodedFragment,
-            null
+            null,
         )
 }
 
@@ -228,7 +228,7 @@ private fun encodePart(
     decodedPart: ByteString,
     charSet: AsciiCharSet,
     startIndex: Int = 0,
-    endIndex: Int = decodedPart.size
+    endIndex: Int = decodedPart.size,
 ): String = buildString {
     for (i in startIndex..<endIndex) {
         val byte = decodedPart[i]

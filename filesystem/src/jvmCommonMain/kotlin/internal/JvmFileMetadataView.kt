@@ -35,7 +35,7 @@ internal open class JvmFileMetadataView(file: JavaPath, vararg options: JavaLink
     FileMetadataView {
     constructor(
         file: Path,
-        vararg options: FileMetadataOption
+        vararg options: FileMetadataOption,
     ) : this(file.toJavaPath(), *options.toJavaOptions())
 
     private val fileAttributeView =
@@ -47,7 +47,7 @@ internal open class JvmFileMetadataView(file: JavaPath, vararg options: JavaLink
     override suspend fun setTimes(
         lastModificationTime: FileTime?,
         lastAccessTime: FileTime?,
-        creationTime: FileTime?
+        creationTime: FileTime?,
     ) {
         runInterruptible(Dispatchers.IO) {
             fileAttributeView.setTimes(lastModificationTime, lastAccessTime, creationTime)

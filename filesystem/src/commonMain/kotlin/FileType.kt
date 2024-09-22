@@ -20,5 +20,5 @@ public enum class FileType {
     REGULAR_FILE,
     DIRECTORY,
     SYMBOLIC_LINK,
-    OTHER
+    OTHER,
 }

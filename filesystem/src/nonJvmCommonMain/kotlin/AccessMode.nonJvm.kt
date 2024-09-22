@@ -19,5 +19,5 @@ package me.zhanghai.kotlin.filesystem
 public actual enum class AccessMode {
     READ,
     WRITE,
-    EXECUTE
+    EXECUTE,
 }

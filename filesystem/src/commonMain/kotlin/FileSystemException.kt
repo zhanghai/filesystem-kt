@@ -31,7 +31,7 @@ public expect fun FileSystemException(
     file: String? = null,
     otherFile: String? = null,
     reason: String? = null,
-    cause: Throwable? = null
+    cause: Throwable? = null,
 ): FileSystemException
 
 public val FileSystemException.file: String?

@@ -22,6 +22,6 @@ public actual fun FileSystemException(
     file: String?,
     otherFile: String?,
     reason: String?,
-    cause: Throwable?
+    cause: Throwable?,
 ): FileSystemException =
     FileSystemException(file, otherFile, reason).apply { cause?.let { initCause(it) } }

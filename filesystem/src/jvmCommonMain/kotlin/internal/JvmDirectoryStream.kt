@@ -32,7 +32,7 @@ import me.zhanghai.kotlin.filesystem.Path
 internal class JvmDirectoryStream
 private constructor(
     private val directoryStream: JavaDirectoryStream<JavaPath>,
-    private val readMetadata: Boolean
+    private val readMetadata: Boolean,
 ) : DirectoryStream {
     private val directoryIterator = directoryStream.iterator()
 
@@ -69,7 +69,7 @@ private constructor(
     companion object {
         suspend operator fun invoke(
             directory: Path,
-            vararg options: DirectoryStreamOption
+            vararg options: DirectoryStreamOption,
         ): JvmDirectoryStream {
             val javaDirectory = directory.toJavaPath()
             val javaDirectoryStream =

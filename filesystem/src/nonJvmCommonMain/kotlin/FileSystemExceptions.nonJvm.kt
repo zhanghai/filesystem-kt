@@ -22,14 +22,14 @@ internal constructor(
     otherFile: String?,
     reason: String?,
     cause: Throwable?,
-    @Suppress("UNUSED_PARAMETER") any: Any?
+    @Suppress("UNUSED_PARAMETER") any: Any?,
 ) : FileSystemException(file, otherFile, reason, cause, null)
 
 public actual fun AccessDeniedException(
     file: String?,
     otherFile: String?,
     reason: String?,
-    cause: Throwable?
+    cause: Throwable?,
 ): AccessDeniedException = AccessDeniedException(file, otherFile, reason, cause, null)
 
 public actual class AtomicMoveNotSupportedException
@@ -38,14 +38,14 @@ internal constructor(
     target: String?,
     reason: String?,
     cause: Throwable?,
-    @Suppress("UNUSED_PARAMETER") any: Any?
+    @Suppress("UNUSED_PARAMETER") any: Any?,
 ) : FileSystemException(source, target, reason, cause, null)
 
 public actual fun AtomicMoveNotSupportedException(
     source: String?,
     target: String?,
     reason: String?,
-    cause: Throwable?
+    cause: Throwable?,
 ): AtomicMoveNotSupportedException =
     AtomicMoveNotSupportedException(source, target, reason, cause, null)
 
@@ -54,13 +54,13 @@ internal constructor(
     directory: String?,
     reason: String?,
     cause: Throwable?,
-    @Suppress("UNUSED_PARAMETER") any: Any?
+    @Suppress("UNUSED_PARAMETER") any: Any?,
 ) : FileSystemException(directory, null, reason, cause, null)
 
 public actual fun DirectoryNotEmptyException(
     directory: String?,
     reason: String?,
-    cause: Throwable?
+    cause: Throwable?,
 ): DirectoryNotEmptyException = DirectoryNotEmptyException(directory, reason, cause, null)
 
 public actual class FileAlreadyExistsException
@@ -69,14 +69,14 @@ internal constructor(
     otherFile: String?,
     reason: String?,
     cause: Throwable?,
-    @Suppress("UNUSED_PARAMETER") any: Any?
+    @Suppress("UNUSED_PARAMETER") any: Any?,
 ) : FileSystemException(file, otherFile, reason, cause, null)
 
 public actual fun FileAlreadyExistsException(
     file: String?,
     otherFile: String?,
     reason: String?,
-    cause: Throwable?
+    cause: Throwable?,
 ): FileAlreadyExistsException = FileAlreadyExistsException(file, otherFile, reason, cause, null)
 
 public actual class FileSystemLoopException
@@ -84,13 +84,13 @@ internal constructor(
     file: String?,
     reason: String?,
     cause: Throwable?,
-    @Suppress("UNUSED_PARAMETER") any: Any?
+    @Suppress("UNUSED_PARAMETER") any: Any?,
 ) : FileSystemException(file, null, reason, cause, null)
 
 public actual fun FileSystemLoopException(
     file: String?,
     reason: String?,
-    cause: Throwable?
+    cause: Throwable?,
 ): FileSystemLoopException = FileSystemLoopException(file, reason, cause, null)
 
 public actual class NoSuchFileException
@@ -99,14 +99,14 @@ internal constructor(
     otherFile: String?,
     reason: String?,
     cause: Throwable?,
-    @Suppress("UNUSED_PARAMETER") any: Any?
+    @Suppress("UNUSED_PARAMETER") any: Any?,
 ) : FileSystemException(file, otherFile, reason, cause, null)
 
 public actual fun NoSuchFileException(
     file: String?,
     otherFile: String?,
     reason: String?,
-    cause: Throwable?
+    cause: Throwable?,
 ): NoSuchFileException = NoSuchFileException(file, otherFile, reason, cause, null)
 
 public actual class NotDirectoryException
@@ -114,13 +114,13 @@ internal constructor(
     file: String?,
     reason: String?,
     cause: Throwable?,
-    @Suppress("UNUSED_PARAMETER") any: Any?
+    @Suppress("UNUSED_PARAMETER") any: Any?,
 ) : FileSystemException(file, null, reason, cause, null)
 
 public actual fun NotDirectoryException(
     file: String?,
     reason: String?,
-    cause: Throwable?
+    cause: Throwable?,
 ): NotDirectoryException = NotDirectoryException(file, reason, cause, null)
 
 public actual class NotLinkException
@@ -129,12 +129,12 @@ internal constructor(
     otherFile: String?,
     reason: String?,
     cause: Throwable?,
-    @Suppress("UNUSED_PARAMETER") any: Any?
+    @Suppress("UNUSED_PARAMETER") any: Any?,
 ) : FileSystemException(file, otherFile, reason, cause, null)
 
 public actual fun NotLinkException(
     file: String?,
     otherFile: String?,
     reason: String?,
-    cause: Throwable?
+    cause: Throwable?,
 ): NotLinkException = NotLinkException(file, otherFile, reason, cause, null)

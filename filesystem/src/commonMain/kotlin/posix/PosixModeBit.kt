@@ -28,5 +28,5 @@ public enum class PosixModeBit {
     GROUP_EXECUTE,
     OTHERS_READ,
     OTHERS_WRITE,
-    OTHERS_EXECUTE
+    OTHERS_EXECUTE,
 }

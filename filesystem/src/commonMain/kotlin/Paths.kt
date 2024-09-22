@@ -124,7 +124,7 @@ public suspend inline fun Path.readSymbolicLink(): ByteString =
 @Throws(CancellationException::class, IOException::class)
 public suspend inline fun Path.createSymbolicLinkTo(
     target: ByteString,
-    vararg options: CreateFileOption
+    vararg options: CreateFileOption,
 ) {
     requireFileSystem().createSymbolicLink(this, target, *options)
 }

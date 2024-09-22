@@ -24,7 +24,7 @@ internal constructor(
     private val otherFile: String?,
     private val reason: String?,
     cause: Throwable?,
-    @Suppress("UNUSED_PARAMETER") any: Any?
+    @Suppress("UNUSED_PARAMETER") any: Any?,
 ) : IOException(reason, cause) {
     public actual open fun getFile(): String? = file
 
@@ -37,5 +37,5 @@ public actual fun FileSystemException(
     file: String?,
     otherFile: String?,
     reason: String?,
-    cause: Throwable?
+    cause: Throwable?,
 ): FileSystemException = FileSystemException(file, otherFile, reason, cause, null)

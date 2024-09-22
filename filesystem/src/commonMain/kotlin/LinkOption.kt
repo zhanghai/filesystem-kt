@@ -19,11 +19,13 @@ package me.zhanghai.kotlin.filesystem
 /**
  * Options for handling a symbolic link.
  *
+ * @see FileSystem.copy
+ * @see FileSystem.move
  * @see FileSystem.openContent
  * @see FileSystem.openMetadataView
  * @see FileSystem.readMetadata
  */
-public enum class LinkOption : FileContentOption, FileMetadataOption {
+public enum class LinkOption : CopyFileOption, FileContentOption, FileMetadataOption {
     /**
      * Do not follow symbolic links.
      *

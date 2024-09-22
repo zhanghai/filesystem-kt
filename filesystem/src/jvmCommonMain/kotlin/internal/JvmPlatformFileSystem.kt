@@ -18,6 +18,7 @@ package me.zhanghai.kotlin.filesystem.internal
 
 import java.nio.file.CopyOption
 import java.nio.file.Files
+import java.nio.file.LinkOption as JavaLinkOption
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 import java.nio.file.attribute.FileAttribute
@@ -39,6 +40,7 @@ import me.zhanghai.kotlin.filesystem.FileContentOption
 import me.zhanghai.kotlin.filesystem.FileMetadataOption
 import me.zhanghai.kotlin.filesystem.FileMetadataView
 import me.zhanghai.kotlin.filesystem.FileStore
+import me.zhanghai.kotlin.filesystem.LinkOption
 import me.zhanghai.kotlin.filesystem.Path
 import me.zhanghai.kotlin.filesystem.PlatformFileSystem
 import me.zhanghai.kotlin.filesystem.posix.PosixModeBit
@@ -184,6 +186,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
                         BasicCopyFileOption.REPLACE_EXISTING -> StandardCopyOption.REPLACE_EXISTING
                         BasicCopyFileOption.COPY_METADATA -> StandardCopyOption.COPY_ATTRIBUTES
                         BasicCopyFileOption.ATOMIC_MOVE -> StandardCopyOption.ATOMIC_MOVE
+                        LinkOption.NO_FOLLOW_LINKS -> JavaLinkOption.NOFOLLOW_LINKS
                         else -> throw UnsupportedOperationException("Unsupported option $option")
                     }
             }

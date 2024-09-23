@@ -20,18 +20,18 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.io.Buffer
 import kotlinx.io.IOException
 
-public interface AsyncSource : AsyncCloseable {
+public interface RawAsyncSource : AsyncCloseable {
     @Throws(CancellationException::class, IOException::class)
     public suspend fun readAtMostTo(sink: Buffer, byteCount: Long): Long
 }
 
-internal fun AsyncSource.withCloseable(closeable: AsyncCloseable): AsyncSource =
-    CloseableAsyncSource(this, closeable)
+internal fun RawAsyncSource.withCloseable(closeable: AsyncCloseable): RawAsyncSource =
+    CloseableRawAsyncSource(this, closeable)
 
-private class CloseableAsyncSource(
-    private val source: AsyncSource,
+private class CloseableRawAsyncSource(
+    private val source: RawAsyncSource,
     private val closeable: AsyncCloseable,
-) : AsyncSource {
+) : RawAsyncSource {
     override suspend fun readAtMostTo(sink: Buffer, byteCount: Long): Long =
         source.readAtMostTo(sink, byteCount)
 

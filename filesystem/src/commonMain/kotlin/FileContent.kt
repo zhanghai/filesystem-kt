@@ -21,8 +21,8 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.io.Buffer
 import kotlinx.io.IOException
 import me.zhanghai.kotlin.filesystem.io.AsyncCloseable
-import me.zhanghai.kotlin.filesystem.io.AsyncSink
-import me.zhanghai.kotlin.filesystem.io.AsyncSource
+import me.zhanghai.kotlin.filesystem.io.RawAsyncSink
+import me.zhanghai.kotlin.filesystem.io.RawAsyncSource
 
 public interface FileContent : AsyncCloseable {
     @Throws(CancellationException::class, IOException::class)
@@ -38,11 +38,13 @@ public interface FileContent : AsyncCloseable {
     @Throws(CancellationException::class, IOException::class) public suspend fun sync()
 }
 
-public fun FileContent.openSource(position: Long = 0): AsyncSource =
-    FileContentSource(this, position)
+public fun FileContent.openSource(position: Long = 0): RawAsyncSource =
+    FileContentRawAsyncSource(this, position)
 
-private class FileContentSource(private val fileContent: FileContent, private var position: Long) :
-    AsyncSource {
+private class FileContentRawAsyncSource(
+    private val fileContent: FileContent,
+    private var position: Long,
+) : RawAsyncSource {
     @Volatile private var closed: Boolean = false
 
     @Throws(CancellationException::class, IOException::class)
@@ -67,10 +69,13 @@ private class FileContentSource(private val fileContent: FileContent, private va
     }
 }
 
-public fun FileContent.openSink(position: Long = 0): AsyncSink = FileContentSink(this, position)
+public fun FileContent.openSink(position: Long = 0): RawAsyncSink =
+    FileContentRawAsyncSink(this, position)
 
-private class FileContentSink(private val fileContent: FileContent, private var position: Long) :
-    AsyncSink {
+private class FileContentRawAsyncSink(
+    private val fileContent: FileContent,
+    private var position: Long,
+) : RawAsyncSink {
     @Volatile private var closed: Boolean = false
 
     @Throws(CancellationException::class, IOException::class)

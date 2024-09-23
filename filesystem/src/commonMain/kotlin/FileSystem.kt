@@ -19,8 +19,8 @@ package me.zhanghai.kotlin.filesystem
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.io.IOException
 import kotlinx.io.bytestring.ByteString
-import me.zhanghai.kotlin.filesystem.io.AsyncSink
-import me.zhanghai.kotlin.filesystem.io.AsyncSource
+import me.zhanghai.kotlin.filesystem.io.RawAsyncSink
+import me.zhanghai.kotlin.filesystem.io.RawAsyncSource
 import me.zhanghai.kotlin.filesystem.io.use
 import me.zhanghai.kotlin.filesystem.io.withCloseable
 
@@ -47,7 +47,7 @@ public interface FileSystem {
     public suspend fun openContent(file: Path, vararg options: FileContentOption): FileContent
 
     @Throws(CancellationException::class, IOException::class)
-    public suspend fun openSource(file: Path, vararg options: FileContentOption): AsyncSource {
+    public suspend fun openSource(file: Path, vararg options: FileContentOption): RawAsyncSource {
         require(BasicFileContentOption.WRITE !in options) { BasicFileContentOption.WRITE }
         require(BasicFileContentOption.APPEND !in options) { BasicFileContentOption.APPEND }
         return openContent(file, *options).let { it.openSource().withCloseable(it) }
@@ -57,7 +57,7 @@ public interface FileSystem {
     public suspend fun openSink(
         file: Path,
         vararg options: FileContentOption = OPEN_SINK_OPTIONS_DEFAULT,
-    ): AsyncSink {
+    ): RawAsyncSink {
         require(BasicFileContentOption.READ !in options) { BasicFileContentOption.READ }
         require(
             BasicFileContentOption.WRITE in options || BasicFileContentOption.APPEND in options

@@ -20,8 +20,8 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.io.IOException
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.encodeToByteString
-import me.zhanghai.kotlin.filesystem.io.AsyncSink
-import me.zhanghai.kotlin.filesystem.io.AsyncSource
+import me.zhanghai.kotlin.filesystem.io.RawAsyncSink
+import me.zhanghai.kotlin.filesystem.io.RawAsyncSource
 
 public fun Path.Companion.fromPlatformPath(platformPath: ByteString): Path =
     FileSystemRegistry.requirePlatformFileSystem().getPath(platformPath)
@@ -95,13 +95,13 @@ public suspend inline fun Path.openContent(vararg options: FileContentOption): F
     requireFileSystem().openContent(this, *options)
 
 @Throws(CancellationException::class, IOException::class)
-public suspend inline fun Path.openSource(vararg options: FileContentOption): AsyncSource =
+public suspend inline fun Path.openSource(vararg options: FileContentOption): RawAsyncSource =
     requireFileSystem().openSource(this, *options)
 
 @Throws(CancellationException::class, IOException::class)
 public suspend inline fun Path.openSink(
     vararg options: FileContentOption = FileSystem.OPEN_SINK_OPTIONS_DEFAULT
-): AsyncSink = requireFileSystem().openSink(this, *options)
+): RawAsyncSink = requireFileSystem().openSink(this, *options)
 
 @Throws(CancellationException::class, IOException::class)
 public suspend inline fun Path.openDirectoryStream(

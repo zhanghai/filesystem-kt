@@ -20,18 +20,18 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.io.Buffer
 import kotlinx.io.IOException
 
-public interface AsyncSink : AsyncCloseable, AsyncFlushable {
+public interface RawAsyncSink : AsyncCloseable, AsyncFlushable {
     @Throws(CancellationException::class, IOException::class)
     public suspend fun write(source: Buffer, byteCount: Long)
 }
 
-internal fun AsyncSink.withCloseable(closeable: AsyncCloseable): AsyncSink =
-    CloseableAsyncSink(this, closeable)
+internal fun RawAsyncSink.withCloseable(closeable: AsyncCloseable): RawAsyncSink =
+    CloseableRawAsyncSink(this, closeable)
 
-private class CloseableAsyncSink(
-    private val sink: AsyncSink,
+private class CloseableRawAsyncSink(
+    private val sink: RawAsyncSink,
     private val closeable: AsyncCloseable,
-) : AsyncSink {
+) : RawAsyncSink {
     override suspend fun write(source: Buffer, byteCount: Long) {
         sink.write(source, byteCount)
     }

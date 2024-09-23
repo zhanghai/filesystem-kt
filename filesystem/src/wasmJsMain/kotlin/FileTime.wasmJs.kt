@@ -20,7 +20,7 @@ public actual class FileTime(public val millis: Long, public val excessNanos: Lo
     Comparable<FileTime> {
     public actual fun toMillis(): Long = millis
 
-    override fun compareTo(other: FileTime): Int {
+    actual override fun compareTo(other: FileTime): Int {
         millis.compareTo(other.millis).let {
             if (it != 0) {
                 return it

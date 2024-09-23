@@ -18,4 +18,6 @@ package me.zhanghai.kotlin.filesystem
 
 public expect class FileTime : Comparable<FileTime> {
     public fun toMillis(): Long
+
+    override fun compareTo(other: FileTime): Int
 }

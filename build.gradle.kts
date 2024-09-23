@@ -29,6 +29,8 @@ subprojects {
             allWarningsAsErrors = true
             freeCompilerArgs.add("-Xjvm-default=all")
             freeCompilerArgs.add("-Xexpect-actual-classes")
+            // For suppressing INVISIBLE_MEMBER and INVISIBLE_REFERENCE.
+            freeCompilerArgs.add("-Xdont-warn-on-error-suppression")
         }
     }
 }

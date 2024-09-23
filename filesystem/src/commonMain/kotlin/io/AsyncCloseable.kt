@@ -22,10 +22,13 @@ import kotlin.contracts.contract
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.io.IOException
 
+/** @see AutoCloseable */
 public interface AsyncCloseable {
+    /** @see AutoCloseable.close */
     @Throws(CancellationException::class, IOException::class) public suspend fun close()
 }
 
+/** @see kotlin.use */
 @OptIn(ExperimentalContracts::class)
 public suspend inline fun <T : AsyncCloseable?, R> T.use(block: (T) -> R): R {
     contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }

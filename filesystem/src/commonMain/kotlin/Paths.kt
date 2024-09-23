@@ -20,8 +20,10 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.io.IOException
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.encodeToByteString
+import me.zhanghai.kotlin.filesystem.internal.ForeignCopyFile
 import me.zhanghai.kotlin.filesystem.io.RawAsyncSink
 import me.zhanghai.kotlin.filesystem.io.RawAsyncSource
+import me.zhanghai.kotlin.filesystem.io.use
 
 public fun Path.Companion.fromPlatformPath(platformPath: ByteString): Path =
     FileSystemRegistry.requirePlatformFileSystem().getPath(platformPath)
@@ -85,6 +87,18 @@ public suspend inline fun Path.notExists(followLinks: Boolean = true): Boolean =
 public suspend inline fun Path.openMetadataView(
     vararg options: FileMetadataOption
 ): FileMetadataView = requireFileSystem().openMetadataView(this, *options)
+
+@Throws(CancellationException::class, IOException::class)
+public suspend inline fun Path.setTimes(
+    lastModificationTime: FileTime? = null,
+    lastAccessTime: FileTime? = null,
+    creationTime: FileTime? = null,
+    vararg options: FileMetadataOption,
+) {
+    openMetadataView(*options).use {
+        it.setTimes(lastModificationTime, lastAccessTime, creationTime)
+    }
+}
 
 @Throws(CancellationException::class, IOException::class)
 public suspend inline fun Path.readMetadata(vararg options: FileMetadataOption): FileMetadata =
@@ -154,12 +168,24 @@ public suspend inline fun Path.isSameFileAs(other: Path): Boolean =
 
 @Throws(CancellationException::class, IOException::class)
 public suspend inline fun Path.copyTo(target: Path, vararg options: CopyFileOption) {
-    requireFileSystem().copy(this, target, *options)
+    val fileSystem = requireFileSystem()
+    val targetFileSystem = target.requireFileSystem()
+    if (fileSystem == targetFileSystem) {
+        fileSystem.copy(this, target, *options)
+    } else {
+        ForeignCopyFile.copy(this, target, *options)
+    }
 }
 
 @Throws(CancellationException::class, IOException::class)
 public suspend inline fun Path.moveTo(target: Path, vararg options: CopyFileOption) {
-    requireFileSystem().move(this, target, *options)
+    val fileSystem = requireFileSystem()
+    val targetFileSystem = target.requireFileSystem()
+    if (fileSystem == targetFileSystem) {
+        fileSystem.move(this, target, *options)
+    } else {
+        ForeignCopyFile.move(this, target, *options)
+    }
 }
 
 @Throws(CancellationException::class, IOException::class)

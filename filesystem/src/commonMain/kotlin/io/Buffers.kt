@@ -41,6 +41,7 @@ package me.zhanghai.kotlin.filesystem.io
 
 import kotlinx.io.Buffer
 import kotlinx.io.EOFException
+import kotlinx.io.Segment
 import kotlinx.io.checkByteCount
 
 /** @see Buffer.readTo */
@@ -53,4 +54,40 @@ public suspend fun Buffer.readTo(sink: RawAsyncSink, byteCount: Long) {
         )
     }
     sink.write(this, byteCount)
+}
+
+/** @see Buffer.transferTo */
+public suspend fun Buffer.transferTo(sink: RawAsyncSink): Long {
+    val byteCount = size
+    if (byteCount > 0L) {
+        sink.write(this, byteCount)
+    }
+    return byteCount
+}
+
+/** @see Buffer.write */
+public suspend fun Buffer.write(source: RawAsyncSource, byteCount: Long) {
+    checkByteCount(byteCount)
+    var remainingByteCount = byteCount
+    while (remainingByteCount > 0L) {
+        val read = source.readAtMostTo(this, remainingByteCount)
+        if (read == -1L) {
+            throw EOFException(
+                "Source exhausted before reading $byteCount bytes. " +
+                    "Only ${byteCount - remainingByteCount} were read."
+            )
+        }
+        remainingByteCount -= read
+    }
+}
+
+/** @see Buffer.transferFrom */
+public suspend fun Buffer.transferFrom(source: RawAsyncSource): Long {
+    var totalBytesRead = 0L
+    while (true) {
+        val readCount = source.readAtMostTo(this, Segment.SIZE.toLong())
+        if (readCount == -1L) break
+        totalBytesRead += readCount
+    }
+    return totalBytesRead
 }

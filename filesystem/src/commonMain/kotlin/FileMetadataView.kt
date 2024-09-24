@@ -16,11 +16,15 @@
 
 package me.zhanghai.kotlin.filesystem
 
+import kotlin.coroutines.cancellation.CancellationException
+import kotlinx.io.IOException
 import me.zhanghai.kotlin.filesystem.io.AsyncCloseable
 
 public interface FileMetadataView : AsyncCloseable {
+    @Throws(CancellationException::class, IOException::class)
     public suspend fun readMetadata(): FileMetadata
 
+    @Throws(CancellationException::class, IOException::class)
     public suspend fun setTimes(
         lastModificationTime: FileTime? = null,
         lastAccessTime: FileTime? = null,

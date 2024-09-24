@@ -22,8 +22,10 @@ import java.nio.file.Path as JavaPath
 import java.nio.file.Paths
 import java.nio.file.attribute.BasicFileAttributeView
 import java.nio.file.attribute.PosixFileAttributeView
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
+import kotlinx.io.IOException
 import me.zhanghai.kotlin.filesystem.FileMetadataOption
 import me.zhanghai.kotlin.filesystem.FileTime
 import me.zhanghai.kotlin.filesystem.Path
@@ -42,6 +44,7 @@ internal class JvmPosixFileMetadataView(
         vararg options: FileMetadataOption,
     ) : this(file.toJavaPath(), *options.toJavaOptions())
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun readMetadata(): PosixFileMetadata {
         val attributes =
             runInterruptible(Dispatchers.IO) { Files.readAttributes(file, ATTRIBUTES, *options) }
@@ -127,6 +130,7 @@ internal class JvmPosixFileMetadataView(
         )
     }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun setTimes(
         lastModificationTime: FileTime?,
         lastAccessTime: FileTime?,
@@ -139,6 +143,7 @@ internal class JvmPosixFileMetadataView(
         }
     }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun setMode(mode: Set<PosixModeBit>) {
         val modeInt =
             mode.fold(0) { modeInt, modeBit ->
@@ -163,13 +168,14 @@ internal class JvmPosixFileMetadataView(
         }
     }
 
-    override suspend fun setOwnership(userId: Int?, groupId: Int?) {
-        if (userId != null) {
+    @Throws(CancellationException::class, IOException::class)
+    override suspend fun setOwnership(userId: Int, groupId: Int) {
+        if (userId != -1) {
             runInterruptible(Dispatchers.IO) {
                 Files.setAttribute(file, ATTRIBUTE_UID, userId, *options)
             }
         }
-        if (groupId != null) {
+        if (groupId != -1) {
             runInterruptible(Dispatchers.IO) {
                 Files.setAttribute(file, ATTRIBUTE_GID, groupId, *options)
             }

@@ -21,8 +21,10 @@ import java.nio.file.LinkOption as JavaLinkOption
 import java.nio.file.Path as JavaPath
 import java.nio.file.attribute.BasicFileAttributeView
 import java.nio.file.attribute.BasicFileAttributes
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
+import kotlinx.io.IOException
 import me.zhanghai.kotlin.filesystem.FileMetadata
 import me.zhanghai.kotlin.filesystem.FileMetadataOption
 import me.zhanghai.kotlin.filesystem.FileMetadataView
@@ -41,9 +43,11 @@ internal open class JvmFileMetadataView(file: JavaPath, vararg options: JavaLink
     private val fileAttributeView =
         Files.getFileAttributeView(file, BasicFileAttributeView::class.java, *options)!!
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun readMetadata(): FileMetadata =
         runInterruptible(Dispatchers.IO) { JvmFileMetadata(fileAttributeView.readAttributes()) }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun setTimes(
         lastModificationTime: FileTime?,
         lastAccessTime: FileTime?,

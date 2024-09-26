@@ -87,7 +87,8 @@ internal class JvmFileContent private constructor(private val fileChannel: FileC
                             currentPosition += writtenByteCount
                         }
                     }
-                }
+                },
+                byteCount
             )
         }
     }

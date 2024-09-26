@@ -35,13 +35,13 @@ public interface FileSystem {
 
     @Throws(CancellationException::class, IOException::class)
     public suspend fun openMetadataView(
-        file: Path,
+        path: Path,
         vararg options: FileMetadataOption,
     ): FileMetadataView
 
     @Throws(CancellationException::class, IOException::class)
-    public suspend fun readMetadata(file: Path, vararg options: FileMetadataOption): FileMetadata =
-        openMetadataView(file, *options).use { it.readMetadata() }
+    public suspend fun readMetadata(path: Path, vararg options: FileMetadataOption): FileMetadata =
+        openMetadataView(path, *options).use { it.readMetadata() }
 
     @Throws(CancellationException::class, IOException::class)
     public suspend fun openContent(file: Path, vararg options: FileContentOption): FileContent

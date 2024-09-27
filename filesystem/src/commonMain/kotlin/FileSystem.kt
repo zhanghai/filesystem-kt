@@ -28,20 +28,20 @@ public interface FileSystem {
     public val scheme: String
 
     @Throws(CancellationException::class, IOException::class)
-    public suspend fun getRealPath(path: Path): Path
+    public suspend fun getRealPath(file: Path): Path
 
     @Throws(CancellationException::class, IOException::class)
-    public suspend fun checkAccess(path: Path, vararg modes: AccessMode)
+    public suspend fun checkAccess(file: Path, vararg modes: AccessMode)
 
     @Throws(CancellationException::class, IOException::class)
     public suspend fun openMetadataView(
-        path: Path,
+        file: Path,
         vararg options: FileMetadataOption,
     ): FileMetadataView
 
     @Throws(CancellationException::class, IOException::class)
-    public suspend fun readMetadata(path: Path, vararg options: FileMetadataOption): FileMetadata =
-        openMetadataView(path, *options).use { it.readMetadata() }
+    public suspend fun readMetadata(file: Path, vararg options: FileMetadataOption): FileMetadata =
+        openMetadataView(file, *options).use { it.readMetadata() }
 
     @Throws(CancellationException::class, IOException::class)
     public suspend fun openContent(file: Path, vararg options: FileContentOption): FileContent
@@ -103,10 +103,10 @@ public interface FileSystem {
     @Throws(CancellationException::class, IOException::class)
     public suspend fun createHardLink(link: Path, existing: Path)
 
-    @Throws(CancellationException::class, IOException::class) public suspend fun delete(path: Path)
+    @Throws(CancellationException::class, IOException::class) public suspend fun delete(file: Path)
 
     @Throws(CancellationException::class, IOException::class)
-    public suspend fun isSameFile(path1: Path, path2: Path): Boolean
+    public suspend fun isSameFile(file1: Path, file2: Path): Boolean
 
     @Throws(CancellationException::class, IOException::class)
     public suspend fun copy(source: Path, target: Path, vararg options: CopyFileOption)
@@ -115,7 +115,7 @@ public interface FileSystem {
     public suspend fun move(source: Path, target: Path, vararg options: CopyFileOption)
 
     @Throws(CancellationException::class, IOException::class)
-    public suspend fun openFileStore(path: Path): FileStore
+    public suspend fun openFileStore(file: Path): FileStore
 
     public companion object {
         @PublishedApi

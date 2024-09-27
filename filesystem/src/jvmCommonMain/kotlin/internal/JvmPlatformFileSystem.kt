@@ -58,31 +58,31 @@ import me.zhanghai.kotlin.filesystem.posix.PosixModeOption
 import me.zhanghai.kotlin.filesystem.requireSameSchemeAs
 
 internal class JvmPlatformFileSystem : PlatformFileSystem {
-    override suspend fun getRealPath(path: Path): Path {
-        val javaPath = path.toJavaPath()
-        val javaRealPath = runInterruptible(Dispatchers.IO) { javaPath.toRealPath() }
+    override suspend fun getRealPath(file: Path): Path {
+        val javaFile = file.toJavaPath()
+        val javaRealPath = runInterruptible(Dispatchers.IO) { javaFile.toRealPath() }
         return javaRealPath.toPath()
     }
 
-    override suspend fun checkAccess(path: Path, vararg modes: AccessMode) {
-        val javaPath = path.toJavaPath()
-        runInterruptible(Dispatchers.IO) { javaPath.provider.checkAccess(javaPath, *modes) }
+    override suspend fun checkAccess(file: Path, vararg modes: AccessMode) {
+        val javaFile = file.toJavaPath()
+        runInterruptible(Dispatchers.IO) { javaFile.provider.checkAccess(javaFile, *modes) }
     }
 
     override suspend fun openMetadataView(
-        path: Path,
+        file: Path,
         vararg options: FileMetadataOption,
     ): FileMetadataView {
-        val javaPath = path.toJavaPath()
+        val javaFile = file.toJavaPath()
         val javaOptions = options.toJavaOptions()
         return when {
-            JvmPosixFileMetadataView.isSupported -> JvmPosixFileMetadataView(javaPath, *javaOptions)
-            else -> JvmFileMetadataView(javaPath, *javaOptions)
+            JvmPosixFileMetadataView.isSupported -> JvmPosixFileMetadataView(javaFile, *javaOptions)
+            else -> JvmFileMetadataView(javaFile, *javaOptions)
         }
     }
 
     override suspend fun openContent(file: Path, vararg options: FileContentOption): FileContent {
-        val javaPath = file.toJavaPath()
+        val javaFile = file.toJavaPath()
         val javaOptions = mutableSetOf<OpenOption>()
         val javaAttributeList = mutableListOf<FileAttribute<*>>()
         for (option in options) {
@@ -102,7 +102,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         val javaAttributes = javaAttributeList.toTypedArray()
         val channel =
             runInterruptible(Dispatchers.IO) {
-                FileChannel.open(javaPath, javaOptions, *javaAttributes)
+                FileChannel.open(javaFile, javaOptions, *javaAttributes)
             }
         return JvmFileContent(channel)
     }
@@ -156,15 +156,15 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         return runInterruptible(Dispatchers.IO) { Files.createLink(javaLink, javaExisting) }
     }
 
-    override suspend fun delete(path: Path) {
-        val javaPath = path.toJavaPath()
-        runInterruptible(Dispatchers.IO) { Files.delete(javaPath) }
+    override suspend fun delete(file: Path) {
+        val javaFile = file.toJavaPath()
+        runInterruptible(Dispatchers.IO) { Files.delete(javaFile) }
     }
 
-    override suspend fun isSameFile(path1: Path, path2: Path): Boolean {
-        val javaPath1 = path1.toJavaPath()
-        val javaPath2 = path2.toJavaPath()
-        return runInterruptible(Dispatchers.IO) { Files.isSameFile(javaPath1, javaPath2) }
+    override suspend fun isSameFile(file1: Path, file2: Path): Boolean {
+        val javaFile1 = file1.toJavaPath()
+        val javaFile2 = file2.toJavaPath()
+        return runInterruptible(Dispatchers.IO) { Files.isSameFile(javaFile1, javaFile2) }
     }
 
     override suspend fun copy(source: Path, target: Path, vararg options: CopyFileOption) {
@@ -181,9 +181,9 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         runInterruptible(Dispatchers.IO) { Files.move(javaSource, javaTarget, *javaOptions) }
     }
 
-    override suspend fun openFileStore(path: Path): FileStore {
+    override suspend fun openFileStore(file: Path): FileStore {
         val javaFileStore =
-            runInterruptible(Dispatchers.IO) { Files.getFileStore(path.toJavaPath()) }
+            runInterruptible(Dispatchers.IO) { Files.getFileStore(file.toJavaPath()) }
         return JvmFileStore(javaFileStore)
     }
 

@@ -232,10 +232,17 @@ private constructor(
      *
      * @return the byte string representing this relative path
      */
-    public fun toByteString(): ByteString = buildByteString {
+    public fun toByteString(): ByteString {
+        var decodedLength = 0
         for (name in names) {
-            append(Path.NAME_SEPARATOR_BYTE)
-            append(name)
+            decodedLength += 1
+            decodedLength += name.size
+        }
+        return buildByteString(decodedLength) {
+            for (name in names) {
+                append(Path.NAME_SEPARATOR_BYTE)
+                append(name)
+            }
         }
     }
 

@@ -277,7 +277,12 @@ private constructor(
      * @return the URI representing this path
      */
     public fun toUri(): Uri {
-        val decodedPath = buildByteString {
+        var decodedLength = 0
+        for (name in names) {
+            decodedLength += 1
+            decodedLength += name.size
+        }
+        val decodedPath = buildByteString(decodedLength) {
             for (name in names) {
                 append(NAME_SEPARATOR_BYTE)
                 append(name)

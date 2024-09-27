@@ -250,25 +250,40 @@ private fun Byte.hexEncode(): Char =
         else -> throw IllegalArgumentException("Non-half byte $this in URI percent-encoding")
     }
 
-@Suppress("UnusedReceiverParameter")
-internal fun UriParser.decodePart(encodedPart: String): ByteString = buildByteString {
-    var index = 0
-    val length = encodedPart.length
-    while (index < length) {
-        when (val char = encodedPart[index]) {
-            '%' -> {
-                require(index + 3 <= length) {
-                    "Incomplete URI percent-encoding \"${encodedPart.substring(index)}\""
+internal fun UriParser.decodePart(encodedPart: String): ByteString {
+    var decodedLength = 0
+    run {
+        var index = 0
+        val length = encodedPart.length
+        while (index < length) {
+            ++decodedLength
+            when (encodedPart[index]) {
+                '%' -> {
+                    require(index + 3 <= length) {
+                        "Incomplete URI percent-encoding \"${encodedPart.substring(index)}\""
+                    }
+                    index += 3
                 }
-                val halfByte1 = encodedPart[index + 1].hexDecode()
-                val halfByte2 = encodedPart[index + 2].hexDecode()
-                val byte = (halfByte1.toInt() shl 4).toByte() or halfByte2
-                append(byte)
-                index += 3
+                else -> ++index
             }
-            else -> {
-                append(char.code.toByte())
-                ++index
+        }
+    }
+    return buildByteString(decodedLength) {
+        var index = 0
+        val length = encodedPart.length
+        while (index < length) {
+            when (val char = encodedPart[index]) {
+                '%' -> {
+                    val halfByte1 = encodedPart[index + 1].hexDecode()
+                    val halfByte2 = encodedPart[index + 2].hexDecode()
+                    val byte = (halfByte1.toInt() shl 4).toByte() or halfByte2
+                    append(byte)
+                    index += 3
+                }
+                else -> {
+                    append(char.code.toByte())
+                    ++index
+                }
             }
         }
     }

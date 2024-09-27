@@ -210,7 +210,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
 
     private fun Path.toJavaPath(): JavaPath {
         requireSameSchemeAs(this@JvmPlatformFileSystem)
-        return fileSystemTag as JavaPath?
+        return fileSystemTag?.let { it as JavaPath? }
             ?: Paths.get(URI(toUri().toString())).also { fileSystemTag = it }
     }
 

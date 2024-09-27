@@ -34,6 +34,14 @@ public expect fun FileSystemException(
     cause: Throwable? = null,
 ): FileSystemException
 
+public fun FileSystemException(
+    file: Path? = null,
+    otherFile: Path? = null,
+    reason: String? = null,
+    cause: Throwable? = null,
+): FileSystemException =
+    FileSystemException(file?.toUri()?.toString(), otherFile?.toUri()?.toString(), reason, cause)
+
 public val FileSystemException.file: String?
     get() = getFile()
 

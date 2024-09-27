@@ -16,9 +16,9 @@
 
 package me.zhanghai.kotlin.filesystem.internal
 
-import java.nio.file.Files
 import java.nio.file.LinkOption as JavaLinkOption
 import java.nio.file.Path as JavaPath
+import java.nio.file.Files
 import java.nio.file.attribute.BasicFileAttributeView
 import java.nio.file.attribute.BasicFileAttributes
 import kotlin.coroutines.cancellation.CancellationException
@@ -31,15 +31,9 @@ import me.zhanghai.kotlin.filesystem.FileMetadataView
 import me.zhanghai.kotlin.filesystem.FileTime
 import me.zhanghai.kotlin.filesystem.FileType
 import me.zhanghai.kotlin.filesystem.LinkOption
-import me.zhanghai.kotlin.filesystem.Path
 
 internal open class JvmFileMetadataView(file: JavaPath, vararg options: JavaLinkOption) :
     FileMetadataView {
-    constructor(
-        file: Path,
-        vararg options: FileMetadataOption,
-    ) : this(file.toJavaPath(), *options.toJavaOptions())
-
     private val fileAttributeView =
         Files.getFileAttributeView(file, BasicFileAttributeView::class.java, *options)!!
 

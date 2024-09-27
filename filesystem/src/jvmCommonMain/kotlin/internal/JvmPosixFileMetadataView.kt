@@ -16,9 +16,9 @@
 
 package me.zhanghai.kotlin.filesystem.internal
 
+import java.nio.file.Path as JavaPath
 import java.nio.file.Files
 import java.nio.file.LinkOption
-import java.nio.file.Path as JavaPath
 import java.nio.file.Paths
 import java.nio.file.attribute.BasicFileAttributeView
 import java.nio.file.attribute.PosixFileAttributeView
@@ -26,10 +26,7 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import kotlinx.io.IOException
-import me.zhanghai.kotlin.filesystem.FileMetadataOption
 import me.zhanghai.kotlin.filesystem.FileTime
-import me.zhanghai.kotlin.filesystem.Path
-import me.zhanghai.kotlin.filesystem.internal.JvmFileMetadataView.Companion.toJavaOptions
 import me.zhanghai.kotlin.filesystem.posix.PosixFileMetadata
 import me.zhanghai.kotlin.filesystem.posix.PosixFileMetadataView
 import me.zhanghai.kotlin.filesystem.posix.PosixFileType
@@ -39,11 +36,6 @@ internal class JvmPosixFileMetadataView(
     private val file: JavaPath,
     private vararg val options: LinkOption,
 ) : PosixFileMetadataView {
-    constructor(
-        file: Path,
-        vararg options: FileMetadataOption,
-    ) : this(file.toJavaPath(), *options.toJavaOptions())
-
     @Throws(CancellationException::class, IOException::class)
     override suspend fun readMetadata(): PosixFileMetadata {
         val attributes =

@@ -20,24 +20,14 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
-import java.nio.file.LinkOption as JavaLinkOption
-import java.nio.file.OpenOption
-import java.nio.file.StandardOpenOption
-import java.nio.file.attribute.FileAttribute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import kotlinx.io.Buffer
 import kotlinx.io.asSource
 import kotlinx.io.readTo
-import me.zhanghai.kotlin.filesystem.BasicFileContentOption
-import me.zhanghai.kotlin.filesystem.CreateFileOption
 import me.zhanghai.kotlin.filesystem.FileContent
-import me.zhanghai.kotlin.filesystem.FileContentOption
-import me.zhanghai.kotlin.filesystem.LinkOption
-import me.zhanghai.kotlin.filesystem.Path
-import me.zhanghai.kotlin.filesystem.internal.JvmPlatformFileSystem.Companion.toJavaAttribute
 
-internal class JvmFileContent private constructor(private val fileChannel: FileChannel) :
+internal class JvmFileContent(private val fileChannel: FileChannel) :
     FileContent {
     override suspend fun readAtMostTo(position: Long, sink: Buffer, byteCount: Long): Long {
         require(position >= 0) { "position ($position) < 0" }
@@ -112,34 +102,5 @@ internal class JvmFileContent private constructor(private val fileChannel: FileC
 
     override suspend fun close() {
         runInterruptible(Dispatchers.IO) { fileChannel.close() }
-    }
-
-    companion object {
-        suspend operator fun invoke(file: Path, vararg options: FileContentOption): JvmFileContent {
-            val javaPath = file.toJavaPath()
-            val javaOptions = mutableSetOf<OpenOption>()
-            val javaAttributeList = mutableListOf<FileAttribute<*>>()
-            for (option in options) {
-                when (option) {
-                    BasicFileContentOption.READ -> javaOptions += StandardOpenOption.READ
-                    BasicFileContentOption.WRITE -> javaOptions += StandardOpenOption.WRITE
-                    BasicFileContentOption.APPEND -> javaOptions += StandardOpenOption.APPEND
-                    BasicFileContentOption.TRUNCATE_EXISTING ->
-                        javaOptions += StandardOpenOption.TRUNCATE_EXISTING
-                    BasicFileContentOption.CREATE -> javaOptions += StandardOpenOption.CREATE
-                    BasicFileContentOption.CREATE_NEW ->
-                        javaOptions += StandardOpenOption.CREATE_NEW
-                    LinkOption.NO_FOLLOW_LINKS -> javaOptions += JavaLinkOption.NOFOLLOW_LINKS
-                    is CreateFileOption -> javaAttributeList += option.toJavaAttribute()
-                    else -> throw UnsupportedOperationException("Unsupported option $option")
-                }
-            }
-            val javaAttributes = javaAttributeList.toTypedArray()
-            val channel =
-                runInterruptible(Dispatchers.IO) {
-                    FileChannel.open(javaPath, javaOptions, *javaAttributes)
-                }
-            return JvmFileContent(channel)
-        }
     }
 }

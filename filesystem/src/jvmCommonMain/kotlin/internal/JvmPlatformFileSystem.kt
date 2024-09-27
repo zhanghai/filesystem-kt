@@ -16,14 +16,20 @@
 
 package me.zhanghai.kotlin.filesystem.internal
 
+import java.nio.file.LinkOption as JavaLinkOption
+import java.nio.file.Path as JavaPath
+import java.net.URI
+import java.nio.channels.FileChannel
 import java.nio.file.CopyOption
 import java.nio.file.Files
-import java.nio.file.LinkOption as JavaLinkOption
+import java.nio.file.OpenOption
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
+import java.nio.file.StandardOpenOption
 import java.nio.file.attribute.FileAttribute
 import java.nio.file.attribute.PosixFilePermission
 import java.nio.file.attribute.PosixFilePermissions
+import java.nio.file.spi.FileSystemProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import kotlinx.io.bytestring.ByteString
@@ -31,6 +37,8 @@ import kotlinx.io.bytestring.decodeToString
 import kotlinx.io.bytestring.encodeToByteString
 import me.zhanghai.kotlin.filesystem.AccessMode
 import me.zhanghai.kotlin.filesystem.BasicCopyFileOption
+import me.zhanghai.kotlin.filesystem.BasicDirectoryStreamOption
+import me.zhanghai.kotlin.filesystem.BasicFileContentOption
 import me.zhanghai.kotlin.filesystem.CopyFileOption
 import me.zhanghai.kotlin.filesystem.CreateFileOption
 import me.zhanghai.kotlin.filesystem.DirectoryStream
@@ -43,8 +51,11 @@ import me.zhanghai.kotlin.filesystem.FileStore
 import me.zhanghai.kotlin.filesystem.LinkOption
 import me.zhanghai.kotlin.filesystem.Path
 import me.zhanghai.kotlin.filesystem.PlatformFileSystem
+import me.zhanghai.kotlin.filesystem.Uri
+import me.zhanghai.kotlin.filesystem.internal.JvmFileMetadataView.Companion.toJavaOptions
 import me.zhanghai.kotlin.filesystem.posix.PosixModeBit
 import me.zhanghai.kotlin.filesystem.posix.PosixModeOption
+import me.zhanghai.kotlin.filesystem.requireSameSchemeAs
 
 internal class JvmPlatformFileSystem : PlatformFileSystem {
     override suspend fun getRealPath(path: Path): Path {
@@ -59,21 +70,60 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
     }
 
     override suspend fun openMetadataView(
-        file: Path,
+        path: Path,
         vararg options: FileMetadataOption,
-    ): FileMetadataView =
-        when {
-            JvmPosixFileMetadataView.isSupported -> JvmPosixFileMetadataView(file, *options)
-            else -> JvmFileMetadataView(file, *options)
+    ): FileMetadataView {
+        val javaPath = path.toJavaPath()
+        val javaOptions = options.toJavaOptions()
+        return when {
+            JvmPosixFileMetadataView.isSupported -> JvmPosixFileMetadataView(javaPath, *javaOptions)
+            else -> JvmFileMetadataView(javaPath, *javaOptions)
         }
+    }
 
-    override suspend fun openContent(file: Path, vararg options: FileContentOption): FileContent =
-        JvmFileContent(file, *options)
+    override suspend fun openContent(file: Path, vararg options: FileContentOption): FileContent {
+        val javaPath = file.toJavaPath()
+        val javaOptions = mutableSetOf<OpenOption>()
+        val javaAttributeList = mutableListOf<FileAttribute<*>>()
+        for (option in options) {
+            when (option) {
+                BasicFileContentOption.READ -> javaOptions += StandardOpenOption.READ
+                BasicFileContentOption.WRITE -> javaOptions += StandardOpenOption.WRITE
+                BasicFileContentOption.APPEND -> javaOptions += StandardOpenOption.APPEND
+                BasicFileContentOption.TRUNCATE_EXISTING ->
+                    javaOptions += StandardOpenOption.TRUNCATE_EXISTING
+                BasicFileContentOption.CREATE -> javaOptions += StandardOpenOption.CREATE
+                BasicFileContentOption.CREATE_NEW -> javaOptions += StandardOpenOption.CREATE_NEW
+                LinkOption.NO_FOLLOW_LINKS -> javaOptions += JavaLinkOption.NOFOLLOW_LINKS
+                is CreateFileOption -> javaAttributeList += option.toJavaAttribute()
+                else -> throw UnsupportedOperationException("Unsupported option $option")
+            }
+        }
+        val javaAttributes = javaAttributeList.toTypedArray()
+        val channel =
+            runInterruptible(Dispatchers.IO) {
+                FileChannel.open(javaPath, javaOptions, *javaAttributes)
+            }
+        return JvmFileContent(channel)
+    }
 
     override suspend fun openDirectoryStream(
         directory: Path,
         vararg options: DirectoryStreamOption,
-    ): DirectoryStream = JvmDirectoryStream(directory, *options)
+    ): DirectoryStream {
+        val javaDirectory = directory.toJavaPath()
+        val javaDirectoryStream =
+            runInterruptible(Dispatchers.IO) { Files.newDirectoryStream(javaDirectory) }
+        var readMetadata = false
+        for (option in options) {
+            when (option) {
+                BasicDirectoryStreamOption.READ_TYPE,
+                BasicDirectoryStreamOption.READ_METADATA -> readMetadata = true
+                else -> throw UnsupportedOperationException("Unsupported option $option")
+            }
+        }
+        return JvmDirectoryStream(javaDirectoryStream, readMetadata)
+    }
 
     override suspend fun createDirectory(directory: Path, vararg options: CreateFileOption) {
         val javaDirectory = directory.toJavaPath()
@@ -131,13 +181,41 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         runInterruptible(Dispatchers.IO) { Files.move(javaSource, javaTarget, *javaOptions) }
     }
 
-    override suspend fun openFileStore(path: Path): FileStore = JvmFileStore(path)
+    override suspend fun openFileStore(path: Path): FileStore {
+        val javaFileStore =
+            runInterruptible(Dispatchers.IO) { Files.getFileStore(path.toJavaPath()) }
+        return JvmFileStore(javaFileStore)
+    }
 
     override fun getPath(platformPath: ByteString): Path =
         Paths.get(platformPath.decodeToString()).toAbsolutePath().toPath()
 
     override fun toPlatformPath(path: Path): ByteString =
         path.toJavaPath().toString().encodeToByteString()
+
+    private fun JavaPath.toPath(): Path {
+        require(isAbsolute) { "Path \"$this\" is not absolute" }
+        val uri = toUri()
+        require(uri.scheme == PlatformFileSystem.SCHEME) {
+            "Expecting path scheme \"${PlatformFileSystem.SCHEME}\" but found \"${uri.scheme}\""
+        }
+        val rootUri =
+            Uri.ofEncoded(
+                scheme = PlatformFileSystem.SCHEME,
+                encodedHost = uri.host,
+                encodedPath = "/",
+            )
+        return Path(rootUri, map { it.toString().encodeToByteString() })
+    }
+
+    private fun Path.toJavaPath(): JavaPath {
+        requireSameSchemeAs(this@JvmPlatformFileSystem)
+        return fileSystemTag as JavaPath?
+            ?: Paths.get(URI(toUri().toString())).also { fileSystemTag = it }
+    }
+
+    private val JavaPath.provider: FileSystemProvider
+        get() = fileSystem.provider()
 
     companion object {
         private fun Array<out CreateFileOption>.toJavaAttributes(): Array<FileAttribute<*>> =

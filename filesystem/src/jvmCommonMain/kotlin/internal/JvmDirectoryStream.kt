@@ -17,20 +17,15 @@
 package me.zhanghai.kotlin.filesystem.internal
 
 import java.nio.file.DirectoryStream as JavaDirectoryStream
-import java.nio.file.Files
-import java.nio.file.LinkOption
 import java.nio.file.Path as JavaPath
+import java.nio.file.LinkOption
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import kotlinx.io.bytestring.encodeToByteString
-import me.zhanghai.kotlin.filesystem.BasicDirectoryStreamOption
 import me.zhanghai.kotlin.filesystem.DirectoryEntry
 import me.zhanghai.kotlin.filesystem.DirectoryStream
-import me.zhanghai.kotlin.filesystem.DirectoryStreamOption
-import me.zhanghai.kotlin.filesystem.Path
 
-internal class JvmDirectoryStream
-private constructor(
+internal class JvmDirectoryStream(
     private val directoryStream: JavaDirectoryStream<JavaPath>,
     private val readMetadata: Boolean,
 ) : DirectoryStream {
@@ -64,25 +59,5 @@ private constructor(
 
     override suspend fun close() {
         runInterruptible(Dispatchers.IO) { directoryStream.close() }
-    }
-
-    companion object {
-        suspend operator fun invoke(
-            directory: Path,
-            vararg options: DirectoryStreamOption,
-        ): JvmDirectoryStream {
-            val javaDirectory = directory.toJavaPath()
-            val javaDirectoryStream =
-                runInterruptible(Dispatchers.IO) { Files.newDirectoryStream(javaDirectory) }
-            var readMetadata = false
-            for (option in options) {
-                when (option) {
-                    BasicDirectoryStreamOption.READ_TYPE,
-                    BasicDirectoryStreamOption.READ_METADATA -> readMetadata = true
-                    else -> throw UnsupportedOperationException("Unsupported option $option")
-                }
-            }
-            return JvmDirectoryStream(javaDirectoryStream, readMetadata)
-        }
     }
 }

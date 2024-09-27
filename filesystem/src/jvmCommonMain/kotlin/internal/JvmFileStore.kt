@@ -17,16 +17,14 @@
 package me.zhanghai.kotlin.filesystem.internal
 
 import java.nio.file.FileStore as JavaFileStore
-import java.nio.file.Files
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.encodeToByteString
 import me.zhanghai.kotlin.filesystem.FileStore
 import me.zhanghai.kotlin.filesystem.FileStoreMetadata
-import me.zhanghai.kotlin.filesystem.Path
 
-internal class JvmFileStore private constructor(private val fileStore: JavaFileStore) : FileStore {
+internal class JvmFileStore(private val fileStore: JavaFileStore) : FileStore {
     override suspend fun readMetadata(): FileStoreMetadata {
         val type = fileStore.type().encodeToByteString()
         var blockSize = 0L
@@ -43,14 +41,6 @@ internal class JvmFileStore private constructor(private val fileStore: JavaFileS
     }
 
     override suspend fun close() {}
-
-    companion object {
-        suspend operator fun invoke(path: Path): JvmFileStore {
-            val javaFileStore =
-                runInterruptible(Dispatchers.IO) { Files.getFileStore(path.toJavaPath()) }
-            return JvmFileStore(javaFileStore)
-        }
-    }
 }
 
 internal class JvmFileStoreMetadata(

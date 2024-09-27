@@ -27,8 +27,7 @@ import kotlinx.io.asSource
 import kotlinx.io.readTo
 import me.zhanghai.kotlin.filesystem.FileContent
 
-internal class JvmFileContent(private val fileChannel: FileChannel) :
-    FileContent {
+internal class JvmFileContent(private val fileChannel: FileChannel) : FileContent {
     override suspend fun readAtMostTo(position: Long, sink: Buffer, byteCount: Long): Long {
         require(position >= 0) { "position ($position) < 0" }
         require(byteCount >= 0) { "byteCount ($byteCount) < 0" }
@@ -78,7 +77,7 @@ internal class JvmFileContent(private val fileChannel: FileChannel) :
                         }
                     }
                 },
-                byteCount
+                byteCount,
             )
         }
     }

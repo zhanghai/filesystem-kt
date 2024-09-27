@@ -16,13 +16,13 @@
 
 package me.zhanghai.kotlin.filesystem.internal
 
-import java.nio.file.LinkOption as JavaLinkOption
-import java.nio.file.Path as JavaPath
 import java.net.URI
 import java.nio.channels.FileChannel
 import java.nio.file.CopyOption
 import java.nio.file.Files
+import java.nio.file.LinkOption as JavaLinkOption
 import java.nio.file.OpenOption
+import java.nio.file.Path as JavaPath
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 import java.nio.file.StandardOpenOption
@@ -210,7 +210,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
 
     private fun Path.toJavaPath(): JavaPath {
         requireSameSchemeAs(this@JvmPlatformFileSystem)
-        return fileSystemTag?.let { it as JavaPath? }
+        return fileSystemTag?.let { it as JavaPath }
             ?: Paths.get(URI(toUri().toString())).also { fileSystemTag = it }
     }
 

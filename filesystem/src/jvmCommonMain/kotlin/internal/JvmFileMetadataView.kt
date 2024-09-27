@@ -16,9 +16,9 @@
 
 package me.zhanghai.kotlin.filesystem.internal
 
+import java.nio.file.Files
 import java.nio.file.LinkOption as JavaLinkOption
 import java.nio.file.Path as JavaPath
-import java.nio.file.Files
 import java.nio.file.attribute.BasicFileAttributeView
 import java.nio.file.attribute.BasicFileAttributes
 import kotlin.coroutines.cancellation.CancellationException

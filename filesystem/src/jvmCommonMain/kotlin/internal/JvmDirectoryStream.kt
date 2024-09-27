@@ -17,8 +17,8 @@
 package me.zhanghai.kotlin.filesystem.internal
 
 import java.nio.file.DirectoryStream as JavaDirectoryStream
-import java.nio.file.Path as JavaPath
 import java.nio.file.LinkOption
+import java.nio.file.Path as JavaPath
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import kotlinx.io.bytestring.encodeToByteString

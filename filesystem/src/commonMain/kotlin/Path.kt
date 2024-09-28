@@ -282,12 +282,13 @@ private constructor(
             decodedLength += 1
             decodedLength += name.size
         }
-        val decodedPath = buildByteString(decodedLength) {
-            for (name in names) {
-                append(NAME_SEPARATOR_BYTE)
-                append(name)
+        val decodedPath =
+            buildByteString(decodedLength) {
+                for (name in names) {
+                    append(NAME_SEPARATOR_BYTE)
+                    append(name)
+                }
             }
-        }
         return rootUri.copyDecoded(decodedPath = decodedPath)
     }
 

@@ -16,9 +16,9 @@
 
 package me.zhanghai.kotlin.filesystem.internal
 
+import java.nio.file.FileSystemException as JavaFileSystemException
 import java.nio.file.Files
 import java.nio.file.LinkOption as JavaLinkOption
-import java.nio.file.Path as JavaPath
 import java.nio.file.attribute.BasicFileAttributeView
 import java.nio.file.attribute.BasicFileAttributes
 import kotlin.coroutines.cancellation.CancellationException
@@ -31,15 +31,26 @@ import me.zhanghai.kotlin.filesystem.FileMetadataView
 import me.zhanghai.kotlin.filesystem.FileTime
 import me.zhanghai.kotlin.filesystem.FileType
 import me.zhanghai.kotlin.filesystem.LinkOption
+import me.zhanghai.kotlin.filesystem.Path
 
-internal open class JvmFileMetadataView(file: JavaPath, vararg options: JavaLinkOption) :
+internal open class JvmFileMetadataView(private val file: Path, vararg options: JavaLinkOption) :
     FileMetadataView {
     private val fileAttributeView =
-        Files.getFileAttributeView(file, BasicFileAttributeView::class.java, *options)!!
+        Files.getFileAttributeView(
+            file.toJavaPath(),
+            BasicFileAttributeView::class.java,
+            *options,
+        )!!
 
     @Throws(CancellationException::class, IOException::class)
     override suspend fun readMetadata(): FileMetadata =
-        runInterruptible(Dispatchers.IO) { JvmFileMetadata(fileAttributeView.readAttributes()) }
+        runInterruptible(Dispatchers.IO) {
+            try {
+                JvmFileMetadata(fileAttributeView.readAttributes())
+            } catch (e: JavaFileSystemException) {
+                throw e.toFileSystemException(file)
+            }
+        }
 
     @Throws(CancellationException::class, IOException::class)
     override suspend fun setTimes(
@@ -48,7 +59,11 @@ internal open class JvmFileMetadataView(file: JavaPath, vararg options: JavaLink
         creationTime: FileTime?,
     ) {
         runInterruptible(Dispatchers.IO) {
-            fileAttributeView.setTimes(lastModificationTime, lastAccessTime, creationTime)
+            try {
+                fileAttributeView.setTimes(lastModificationTime, lastAccessTime, creationTime)
+            } catch (e: JavaFileSystemException) {
+                throw e.toFileSystemException(file)
+            }
         }
     }
 

@@ -59,7 +59,7 @@ internal object ForeignCopyFile {
             throw IOException("Cannot copy special files to a foreign provider")
         }
         if (!copyFileOptions.replaceExisting && target.exists(followLinks = false)) {
-            throw FileAlreadyExistsException(source.toString(), target.toString(), null)
+            throw FileAlreadyExistsException(source, target, null)
         }
         when (sourceType) {
             FileType.REGULAR_FILE -> {
@@ -132,8 +132,8 @@ internal object ForeignCopyFile {
         val copyFileOptions = options.toCopyFileOptions()
         if (copyFileOptions.atomicMove) {
             throw AtomicMoveNotSupportedException(
-                source.toString(),
-                target.toString(),
+                source,
+                target,
                 "Cannot move file atomically to foreign provider",
             )
         }

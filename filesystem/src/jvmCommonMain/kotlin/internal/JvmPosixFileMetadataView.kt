@@ -16,9 +16,9 @@
 
 package me.zhanghai.kotlin.filesystem.internal
 
+import java.nio.file.FileSystemException as JavaFileSystemException
 import java.nio.file.Files
 import java.nio.file.LinkOption
-import java.nio.file.Path as JavaPath
 import java.nio.file.Paths
 import java.nio.file.attribute.BasicFileAttributeView
 import java.nio.file.attribute.PosixFileAttributeView
@@ -27,19 +27,27 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import kotlinx.io.IOException
 import me.zhanghai.kotlin.filesystem.FileTime
+import me.zhanghai.kotlin.filesystem.Path
 import me.zhanghai.kotlin.filesystem.posix.PosixFileMetadata
 import me.zhanghai.kotlin.filesystem.posix.PosixFileMetadataView
 import me.zhanghai.kotlin.filesystem.posix.PosixFileType
 import me.zhanghai.kotlin.filesystem.posix.PosixModeBit
 
 internal class JvmPosixFileMetadataView(
-    private val file: JavaPath,
+    private val file: Path,
     private vararg val options: LinkOption,
 ) : PosixFileMetadataView {
     @Throws(CancellationException::class, IOException::class)
     override suspend fun readMetadata(): PosixFileMetadata {
+        val javaFile = file.toJavaPath()
         val attributes =
-            runInterruptible(Dispatchers.IO) { Files.readAttributes(file, ATTRIBUTES, *options) }
+            runInterruptible(Dispatchers.IO) {
+                try {
+                    Files.readAttributes(javaFile, ATTRIBUTES, *options)
+                } catch (e: JavaFileSystemException) {
+                    throw e.toFileSystemException(file)
+                }
+            }
         val id = attributes[ATTRIBUTE_NANE_FILE_KEY]!!
         val size = attributes[ATTRIBUTE_NANE_SIZE] as Long
         val lastModificationTime =
@@ -128,15 +136,21 @@ internal class JvmPosixFileMetadataView(
         lastAccessTime: FileTime?,
         creationTime: FileTime?,
     ) {
+        val javaFile = file.toJavaPath()
         val attributeView =
-            Files.getFileAttributeView(file, BasicFileAttributeView::class.java, *options)
+            Files.getFileAttributeView(javaFile, BasicFileAttributeView::class.java, *options)
         runInterruptible(Dispatchers.IO) {
-            attributeView.setTimes(lastModificationTime, lastAccessTime, creationTime)
+            try {
+                attributeView.setTimes(lastModificationTime, lastAccessTime, creationTime)
+            } catch (e: JavaFileSystemException) {
+                throw e.toFileSystemException(file)
+            }
         }
     }
 
     @Throws(CancellationException::class, IOException::class)
     override suspend fun setMode(mode: Set<PosixModeBit>) {
+        val javaFile = file.toJavaPath()
         val modeInt =
             mode.fold(0) { modeInt, modeBit ->
                 modeInt or
@@ -156,20 +170,33 @@ internal class JvmPosixFileMetadataView(
                     }
             }
         runInterruptible(Dispatchers.IO) {
-            Files.setAttribute(file, ATTRIBUTE_MODE, modeInt, *options)
+            try {
+                Files.setAttribute(javaFile, ATTRIBUTE_MODE, modeInt, *options)
+            } catch (e: JavaFileSystemException) {
+                throw e.toFileSystemException(file)
+            }
         }
     }
 
     @Throws(CancellationException::class, IOException::class)
     override suspend fun setOwnership(userId: Int, groupId: Int) {
+        val javaFile = file.toJavaPath()
         if (userId != -1) {
             runInterruptible(Dispatchers.IO) {
-                Files.setAttribute(file, ATTRIBUTE_UID, userId, *options)
+                try {
+                    Files.setAttribute(javaFile, ATTRIBUTE_UID, userId, *options)
+                } catch (e: JavaFileSystemException) {
+                    throw e.toFileSystemException(file)
+                }
             }
         }
         if (groupId != -1) {
             runInterruptible(Dispatchers.IO) {
-                Files.setAttribute(file, ATTRIBUTE_GID, groupId, *options)
+                try {
+                    Files.setAttribute(javaFile, ATTRIBUTE_GID, groupId, *options)
+                } catch (e: JavaFileSystemException) {
+                    throw e.toFileSystemException(file)
+                }
             }
         }
     }

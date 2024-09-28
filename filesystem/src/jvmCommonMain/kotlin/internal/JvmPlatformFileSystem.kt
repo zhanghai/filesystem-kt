@@ -16,9 +16,9 @@
 
 package me.zhanghai.kotlin.filesystem.internal
 
-import java.net.URI
 import java.nio.channels.FileChannel
 import java.nio.file.CopyOption
+import java.nio.file.FileSystemException as JavaFileSystemException
 import java.nio.file.Files
 import java.nio.file.LinkOption as JavaLinkOption
 import java.nio.file.OpenOption
@@ -51,7 +51,6 @@ import me.zhanghai.kotlin.filesystem.FileStore
 import me.zhanghai.kotlin.filesystem.LinkOption
 import me.zhanghai.kotlin.filesystem.Path
 import me.zhanghai.kotlin.filesystem.PlatformFileSystem
-import me.zhanghai.kotlin.filesystem.Uri
 import me.zhanghai.kotlin.filesystem.internal.JvmFileMetadataView.Companion.toJavaOptions
 import me.zhanghai.kotlin.filesystem.posix.PosixModeBit
 import me.zhanghai.kotlin.filesystem.posix.PosixModeOption
@@ -59,29 +58,45 @@ import me.zhanghai.kotlin.filesystem.requireSameSchemeAs
 
 internal class JvmPlatformFileSystem : PlatformFileSystem {
     override suspend fun getRealPath(file: Path): Path {
+        file.requireSameSchemeAs(this)
         val javaFile = file.toJavaPath()
-        val javaRealPath = runInterruptible(Dispatchers.IO) { javaFile.toRealPath() }
+        val javaRealPath =
+            runInterruptible(Dispatchers.IO) {
+                try {
+                    javaFile.toRealPath()
+                } catch (e: JavaFileSystemException) {
+                    throw e.toFileSystemException(file)
+                }
+            }
         return javaRealPath.toPath()
     }
 
     override suspend fun checkAccess(file: Path, vararg modes: AccessMode) {
+        file.requireSameSchemeAs(this)
         val javaFile = file.toJavaPath()
-        runInterruptible(Dispatchers.IO) { javaFile.provider.checkAccess(javaFile, *modes) }
+        runInterruptible(Dispatchers.IO) {
+            try {
+                javaFile.provider.checkAccess(javaFile, *modes)
+            } catch (e: JavaFileSystemException) {
+                throw e.toFileSystemException(file)
+            }
+        }
     }
 
     override suspend fun openMetadataView(
         file: Path,
         vararg options: FileMetadataOption,
     ): FileMetadataView {
-        val javaFile = file.toJavaPath()
+        file.requireSameSchemeAs(this)
         val javaOptions = options.toJavaOptions()
         return when {
-            JvmPosixFileMetadataView.isSupported -> JvmPosixFileMetadataView(javaFile, *javaOptions)
-            else -> JvmFileMetadataView(javaFile, *javaOptions)
+            JvmPosixFileMetadataView.isSupported -> JvmPosixFileMetadataView(file, *javaOptions)
+            else -> JvmFileMetadataView(file, *javaOptions)
         }
     }
 
     override suspend fun openContent(file: Path, vararg options: FileContentOption): FileContent {
+        file.requireSameSchemeAs(this)
         val javaFile = file.toJavaPath()
         val javaOptions = mutableSetOf<OpenOption>()
         val javaAttributeList = mutableListOf<FileAttribute<*>>()
@@ -102,18 +117,29 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         val javaAttributes = javaAttributeList.toTypedArray()
         val channel =
             runInterruptible(Dispatchers.IO) {
-                FileChannel.open(javaFile, javaOptions, *javaAttributes)
+                try {
+                    FileChannel.open(javaFile, javaOptions, *javaAttributes)
+                } catch (e: JavaFileSystemException) {
+                    throw e.toFileSystemException(file)
+                }
             }
-        return JvmFileContent(channel)
+        return JvmFileContent(file, channel)
     }
 
     override suspend fun openDirectoryStream(
         directory: Path,
         vararg options: DirectoryStreamOption,
     ): DirectoryStream {
+        directory.requireSameSchemeAs(this)
         val javaDirectory = directory.toJavaPath()
         val javaDirectoryStream =
-            runInterruptible(Dispatchers.IO) { Files.newDirectoryStream(javaDirectory) }
+            runInterruptible(Dispatchers.IO) {
+                try {
+                    Files.newDirectoryStream(javaDirectory)
+                } catch (e: JavaFileSystemException) {
+                    throw e.toFileSystemException(directory)
+                }
+            }
         var readMetadata = false
         for (option in options) {
             when (option) {
@@ -122,18 +148,33 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
                 else -> throw UnsupportedOperationException("Unsupported option $option")
             }
         }
-        return JvmDirectoryStream(javaDirectoryStream, readMetadata)
+        return JvmDirectoryStream(directory, javaDirectoryStream, readMetadata)
     }
 
     override suspend fun createDirectory(directory: Path, vararg options: CreateFileOption) {
+        directory.requireSameSchemeAs(this)
         val javaDirectory = directory.toJavaPath()
         val javaAttributes = options.toJavaAttributes()
-        runInterruptible(Dispatchers.IO) { Files.createDirectory(javaDirectory, *javaAttributes) }
+        runInterruptible(Dispatchers.IO) {
+            try {
+                Files.createDirectory(javaDirectory, *javaAttributes)
+            } catch (e: JavaFileSystemException) {
+                throw e.toFileSystemException(directory)
+            }
+        }
     }
 
     override suspend fun readSymbolicLink(link: Path): ByteString {
+        link.requireSameSchemeAs(this)
         val javaLink = link.toJavaPath()
-        val javaTarget = runInterruptible(Dispatchers.IO) { Files.readSymbolicLink(javaLink) }
+        val javaTarget =
+            runInterruptible(Dispatchers.IO) {
+                try {
+                    Files.readSymbolicLink(javaLink)
+                } catch (e: JavaFileSystemException) {
+                    throw e.toFileSystemException(link)
+                }
+            }
         return javaTarget.toString().encodeToByteString()
     }
 
@@ -142,76 +183,109 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         target: ByteString,
         vararg options: CreateFileOption,
     ) {
+        link.requireSameSchemeAs(this)
         val javaLink = link.toJavaPath()
         val javaTarget = Paths.get(target.decodeToString())
         val javaAttributes = options.toJavaAttributes()
         runInterruptible(Dispatchers.IO) {
-            Files.createSymbolicLink(javaLink, javaTarget, *javaAttributes)
+            try {
+                Files.createSymbolicLink(javaLink, javaTarget, *javaAttributes)
+            } catch (e: JavaFileSystemException) {
+                throw e.toFileSystemException(link)
+            }
         }
     }
 
     override suspend fun createHardLink(link: Path, existing: Path) {
+        link.requireSameSchemeAs(this)
+        existing.requireSameSchemeAs(this)
         val javaLink = link.toJavaPath()
         val javaExisting = existing.toJavaPath()
-        return runInterruptible(Dispatchers.IO) { Files.createLink(javaLink, javaExisting) }
+        return runInterruptible(Dispatchers.IO) {
+            try {
+                Files.createLink(javaLink, javaExisting)
+            } catch (e: JavaFileSystemException) {
+                throw e.toFileSystemException(link, existing)
+            }
+        }
     }
 
     override suspend fun delete(file: Path) {
+        file.requireSameSchemeAs(this)
         val javaFile = file.toJavaPath()
-        runInterruptible(Dispatchers.IO) { Files.delete(javaFile) }
+        runInterruptible(Dispatchers.IO) {
+            try {
+                Files.delete(javaFile)
+            } catch (e: JavaFileSystemException) {
+                throw e.toFileSystemException(file)
+            }
+        }
     }
 
     override suspend fun isSameFile(file1: Path, file2: Path): Boolean {
+        file1.requireSameSchemeAs(this)
+        file2.requireSameSchemeAs(this)
         val javaFile1 = file1.toJavaPath()
         val javaFile2 = file2.toJavaPath()
-        return runInterruptible(Dispatchers.IO) { Files.isSameFile(javaFile1, javaFile2) }
+        return runInterruptible(Dispatchers.IO) {
+            try {
+                Files.isSameFile(javaFile1, javaFile2)
+            } catch (e: JavaFileSystemException) {
+                throw e.toFileSystemException(file1, file2)
+            }
+        }
     }
 
     override suspend fun copy(source: Path, target: Path, vararg options: CopyFileOption) {
+        source.requireSameSchemeAs(this)
+        target.requireSameSchemeAs(this)
         val javaSource = source.toJavaPath()
         val javaTarget = target.toJavaPath()
         val javaOptions = options.toJavaOptions()
-        runInterruptible(Dispatchers.IO) { Files.copy(javaSource, javaTarget, *javaOptions) }
+        runInterruptible(Dispatchers.IO) {
+            try {
+                Files.copy(javaSource, javaTarget, *javaOptions)
+            } catch (e: JavaFileSystemException) {
+                throw e.toFileSystemException(source, target)
+            }
+        }
     }
 
     override suspend fun move(source: Path, target: Path, vararg options: CopyFileOption) {
+        source.requireSameSchemeAs(this)
+        target.requireSameSchemeAs(this)
         val javaSource = source.toJavaPath()
         val javaTarget = target.toJavaPath()
         val javaOptions = options.toJavaOptions()
-        runInterruptible(Dispatchers.IO) { Files.move(javaSource, javaTarget, *javaOptions) }
+        runInterruptible(Dispatchers.IO) {
+            try {
+                Files.move(javaSource, javaTarget, *javaOptions)
+            } catch (e: JavaFileSystemException) {
+                throw e.toFileSystemException(source, target)
+            }
+        }
     }
 
     override suspend fun openFileStore(file: Path): FileStore {
+        file.requireSameSchemeAs(this)
+        val javaFile = file.toJavaPath()
         val javaFileStore =
-            runInterruptible(Dispatchers.IO) { Files.getFileStore(file.toJavaPath()) }
-        return JvmFileStore(javaFileStore)
+            runInterruptible(Dispatchers.IO) {
+                try {
+                    Files.getFileStore(javaFile)
+                } catch (e: JavaFileSystemException) {
+                    throw e.toFileSystemException(file)
+                }
+            }
+        return JvmFileStore(file, javaFileStore)
     }
 
     override fun getPath(platformPath: ByteString): Path =
         Paths.get(platformPath.decodeToString()).toAbsolutePath().toPath()
 
-    override fun toPlatformPath(path: Path): ByteString =
-        path.toJavaPath().toString().encodeToByteString()
-
-    private fun JavaPath.toPath(): Path {
-        require(isAbsolute) { "Path \"$this\" is not absolute" }
-        val uri = toUri()
-        require(uri.scheme == PlatformFileSystem.SCHEME) {
-            "Expecting path scheme \"${PlatformFileSystem.SCHEME}\" but found \"${uri.scheme}\""
-        }
-        val rootUri =
-            Uri.ofEncoded(
-                scheme = PlatformFileSystem.SCHEME,
-                encodedHost = uri.host,
-                encodedPath = "/",
-            )
-        return Path(rootUri, map { it.toString().encodeToByteString() })
-    }
-
-    private fun Path.toJavaPath(): JavaPath {
-        requireSameSchemeAs(this@JvmPlatformFileSystem)
-        return fileSystemTag?.let { it as JavaPath }
-            ?: Paths.get(URI(toUri().toString())).also { fileSystemTag = it }
+    override fun toPlatformPath(path: Path): ByteString {
+        path.requireSameSchemeAs(this)
+        return path.toJavaPath().toString().encodeToByteString()
     }
 
     private val JavaPath.provider: FileSystemProvider

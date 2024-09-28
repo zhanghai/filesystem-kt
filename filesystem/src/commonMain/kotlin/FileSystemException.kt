@@ -18,35 +18,28 @@ package me.zhanghai.kotlin.filesystem
 
 import kotlinx.io.IOException
 
-// https://youtrack.jetbrains.com/issue/KT-15620
-public expect open class FileSystemException : IOException {
-    public open fun getFile(): String?
-
-    public open fun getOtherFile(): String?
-
-    public open fun getReason(): String?
+public open class FileSystemException(
+    public val file: Path? = null,
+    public val otherFile: Path? = null,
+    public val reason: String? = null,
+    cause: Throwable? = null,
+) : IOException(buildMessage(file, otherFile, reason), cause) {
+    public companion object {
+        private fun buildMessage(file: Path?, otherFile: Path?, reason: String?): String? =
+            if (file == null && otherFile == null) {
+                reason
+            } else {
+                buildString {
+                    file?.let { append(it.toUri().toString()) }
+                    otherFile?.let {
+                        append(" -> ")
+                        append(it.toUri().toString())
+                    }
+                    reason?.let {
+                        append(": ")
+                        append(it)
+                    }
+                }
+            }
+    }
 }
-
-public expect fun FileSystemException(
-    file: String? = null,
-    otherFile: String? = null,
-    reason: String? = null,
-    cause: Throwable? = null,
-): FileSystemException
-
-public fun FileSystemException(
-    file: Path? = null,
-    otherFile: Path? = null,
-    reason: String? = null,
-    cause: Throwable? = null,
-): FileSystemException =
-    FileSystemException(file?.toUri()?.toString(), otherFile?.toUri()?.toString(), reason, cause)
-
-public val FileSystemException.file: String?
-    get() = getFile()
-
-public val FileSystemException.otherFile: String?
-    get() = getOtherFile()
-
-public val FileSystemException.reason: String?
-    get() = getReason()

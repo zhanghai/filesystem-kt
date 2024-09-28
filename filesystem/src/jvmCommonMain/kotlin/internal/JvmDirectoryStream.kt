@@ -17,34 +17,56 @@
 package me.zhanghai.kotlin.filesystem.internal
 
 import java.nio.file.DirectoryStream as JavaDirectoryStream
+import java.nio.file.FileSystemException as JavaFileSystemException
 import java.nio.file.LinkOption
 import java.nio.file.Path as JavaPath
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
+import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.encodeToByteString
 import me.zhanghai.kotlin.filesystem.DirectoryEntry
+import me.zhanghai.kotlin.filesystem.DirectoryEntryWithMetadata
 import me.zhanghai.kotlin.filesystem.DirectoryStream
+import me.zhanghai.kotlin.filesystem.FileMetadata
+import me.zhanghai.kotlin.filesystem.Path
 
 internal class JvmDirectoryStream(
+    private val directory: Path,
     private val directoryStream: JavaDirectoryStream<JavaPath>,
     private val readMetadata: Boolean,
 ) : DirectoryStream {
     private val directoryIterator = directoryStream.iterator()
 
     override suspend fun read(): DirectoryEntry? {
-        if (!directoryIterator.hasNext()) {
+        val hasNext =
+            runInterruptible(Dispatchers.IO) {
+                try {
+                    directoryIterator.hasNext()
+                } catch (e: JavaFileSystemException) {
+                    throw e.toFileSystemException(directory)
+                }
+            }
+        if (!hasNext) {
             return null
         }
-        val javaPath = directoryIterator.next()
-        val name = javaPath.fileName.toString().encodeToByteString()
+        val javaFile =
+            runInterruptible(Dispatchers.IO) {
+                try {
+                    directoryIterator.next()
+                } catch (e: JavaFileSystemException) {
+                    throw e.toFileSystemException(directory)
+                }
+            }
+        val name = javaFile.fileName.toString().encodeToByteString()
         if (!readMetadata) {
             return JvmDirectoryEntry(name)
         }
+        val file = javaFile.toPath()
         val metadataView =
             when {
                 JvmPosixFileMetadataView.isSupported ->
-                    JvmPosixFileMetadataView(javaPath, LinkOption.NOFOLLOW_LINKS)
-                else -> JvmFileMetadataView(javaPath, LinkOption.NOFOLLOW_LINKS)
+                    JvmPosixFileMetadataView(file, LinkOption.NOFOLLOW_LINKS)
+                else -> JvmFileMetadataView(file, LinkOption.NOFOLLOW_LINKS)
             }
         var metadataException: Throwable? = null
         val metadata =
@@ -58,6 +80,20 @@ internal class JvmDirectoryStream(
     }
 
     override suspend fun close() {
-        runInterruptible(Dispatchers.IO) { directoryStream.close() }
+        runInterruptible(Dispatchers.IO) {
+            try {
+                directoryStream.close()
+            } catch (e: JavaFileSystemException) {
+                throw e.toFileSystemException(directory)
+            }
+        }
     }
 }
+
+internal class JvmDirectoryEntry(override val name: ByteString) : DirectoryEntry
+
+internal class JvmDirectoryEntryWithMetadata(
+    override val name: ByteString,
+    override val metadata: FileMetadata?,
+    override val metadataException: Throwable?,
+) : DirectoryEntryWithMetadata

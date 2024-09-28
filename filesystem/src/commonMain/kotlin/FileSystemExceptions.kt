@@ -25,6 +25,14 @@ public expect fun AccessDeniedException(
     cause: Throwable? = null,
 ): AccessDeniedException
 
+public fun AccessDeniedException(
+    file: Path? = null,
+    otherFile: Path? = null,
+    reason: String? = null,
+    cause: Throwable? = null,
+): AccessDeniedException =
+    AccessDeniedException(file?.toUri()?.toString(), otherFile?.toUri()?.toString(), reason, cause)
+
 public expect class AtomicMoveNotSupportedException : FileSystemException
 
 public expect fun AtomicMoveNotSupportedException(
@@ -34,6 +42,19 @@ public expect fun AtomicMoveNotSupportedException(
     cause: Throwable? = null,
 ): AtomicMoveNotSupportedException
 
+public fun AtomicMoveNotSupportedException(
+    source: Path? = null,
+    target: Path? = null,
+    reason: String? = null,
+    cause: Throwable? = null,
+): AtomicMoveNotSupportedException =
+    AtomicMoveNotSupportedException(
+        source?.toUri()?.toString(),
+        target?.toUri()?.toString(),
+        reason,
+        cause,
+    )
+
 public expect class DirectoryNotEmptyException : FileSystemException
 
 public expect fun DirectoryNotEmptyException(
@@ -41,6 +62,13 @@ public expect fun DirectoryNotEmptyException(
     reason: String? = null,
     cause: Throwable? = null,
 ): DirectoryNotEmptyException
+
+public fun DirectoryNotEmptyException(
+    directory: Path? = null,
+    reason: String? = null,
+    cause: Throwable? = null,
+): DirectoryNotEmptyException =
+    DirectoryNotEmptyException(directory?.toUri()?.toString(), reason, cause)
 
 public expect class FileAlreadyExistsException : FileSystemException
 
@@ -51,6 +79,19 @@ public expect fun FileAlreadyExistsException(
     cause: Throwable? = null,
 ): FileAlreadyExistsException
 
+public fun FileAlreadyExistsException(
+    file: Path? = null,
+    otherFile: Path? = null,
+    reason: String? = null,
+    cause: Throwable? = null,
+): FileAlreadyExistsException =
+    FileAlreadyExistsException(
+        file?.toUri()?.toString(),
+        otherFile?.toUri()?.toString(),
+        reason,
+        cause,
+    )
+
 public expect class FileSystemLoopException : FileSystemException
 
 public expect fun FileSystemLoopException(
@@ -58,6 +99,12 @@ public expect fun FileSystemLoopException(
     reason: String? = null,
     cause: Throwable? = null,
 ): FileSystemLoopException
+
+public fun FileSystemLoopException(
+    file: Path? = null,
+    reason: String? = null,
+    cause: Throwable? = null,
+): FileSystemLoopException = FileSystemLoopException(file?.toUri()?.toString(), reason, cause)
 
 public expect class NoSuchFileException : FileSystemException
 
@@ -68,6 +115,14 @@ public expect fun NoSuchFileException(
     cause: Throwable? = null,
 ): NoSuchFileException
 
+public fun NoSuchFileException(
+    file: Path? = null,
+    otherFile: Path? = null,
+    reason: String? = null,
+    cause: Throwable? = null,
+): NoSuchFileException =
+    NoSuchFileException(file?.toUri()?.toString(), otherFile?.toUri()?.toString(), reason, cause)
+
 public expect class NotDirectoryException : FileSystemException
 
 public expect fun NotDirectoryException(
@@ -75,6 +130,12 @@ public expect fun NotDirectoryException(
     reason: String? = null,
     cause: Throwable? = null,
 ): NotDirectoryException
+
+public fun NotDirectoryException(
+    file: Path? = null,
+    reason: String? = null,
+    cause: Throwable? = null,
+): NotDirectoryException = NotDirectoryException(file?.toUri()?.toString(), reason, cause)
 
 public expect class NotLinkException : FileSystemException
 
@@ -84,3 +145,11 @@ public expect fun NotLinkException(
     reason: String? = null,
     cause: Throwable? = null,
 ): NotLinkException
+
+public fun NotLinkException(
+    file: Path? = null,
+    otherFile: Path? = null,
+    reason: String? = null,
+    cause: Throwable? = null,
+): NotLinkException =
+    NotLinkException(file?.toUri()?.toString(), otherFile?.toUri()?.toString(), reason, cause)

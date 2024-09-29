@@ -16,19 +16,21 @@
 
 package me.zhanghai.kotlin.filesystem.internal
 
+import java.nio.file.FileSystemException as JavaFileSystemException
+import java.nio.file.LinkOption as JavaLinkOption
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
-import java.nio.file.FileSystemException as JavaFileSystemException
-import java.nio.file.LinkOption as JavaLinkOption
 import java.nio.file.OpenOption
 import java.nio.file.StandardOpenOption
 import java.nio.file.attribute.FileAttribute
 import java.nio.file.attribute.PosixFilePermission
 import java.nio.file.attribute.PosixFilePermissions
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
+import kotlinx.coroutines.withContext
 import kotlinx.io.Buffer
 import kotlinx.io.asSource
 import kotlinx.io.readTo
@@ -55,6 +57,9 @@ private constructor(private val file: Path, private val fileChannel: FileChannel
                     }
 
                     override fun read(bytes: ByteArray, offset: Int, length: Int): Int {
+                        if (Thread.interrupted()) {
+                            throw CancellationException("Job was cancelled by interrupt")
+                        }
                         val byteBuffer = ByteBuffer.wrap(bytes, offset, length)
                         val readByteCount =
                             try {
@@ -92,6 +97,9 @@ private constructor(private val file: Path, private val fileChannel: FileChannel
                     override fun write(bytes: ByteArray, offset: Int, length: Int) {
                         val byteBuffer = ByteBuffer.wrap(bytes, offset, length)
                         while (byteBuffer.hasRemaining()) {
+                            if (Thread.interrupted()) {
+                                throw CancellationException("Job was cancelled by interrupt")
+                            }
                             val writtenByteCount =
                                 try {
                                     fileChannel.write(byteBuffer, currentPosition)
@@ -142,7 +150,7 @@ private constructor(private val file: Path, private val fileChannel: FileChannel
     }
 
     override suspend fun close() {
-        runInterruptible(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             try {
                 fileChannel.close()
             } catch (e: JavaFileSystemException) {
@@ -156,7 +164,7 @@ private constructor(private val file: Path, private val fileChannel: FileChannel
             val javaFile = file.toJavaPath()
             val (javaOptions, javaAttributes) = options.toJavaOptionsAndAttributes()
             val channel =
-                runInterruptible(Dispatchers.IO) {
+                withContext(Dispatchers.IO) {
                     try {
                         FileChannel.open(javaFile, javaOptions, *javaAttributes)
                     } catch (e: JavaFileSystemException) {

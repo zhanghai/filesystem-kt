@@ -39,7 +39,9 @@
 
 package me.zhanghai.kotlin.filesystem.io
 
+import kotlin.coroutines.coroutineContext
 import kotlin.jvm.JvmField
+import kotlinx.coroutines.ensureActive
 import kotlinx.io.Buffer
 import kotlinx.io.EOFException
 import kotlinx.io.InternalIoApi
@@ -47,6 +49,7 @@ import kotlinx.io.RawSource
 import kotlinx.io.Segment
 import kotlinx.io.checkBounds
 
+/** @see kotlinx.io.RealSink */
 @OptIn(InternalIoApi::class)
 internal class RealAsyncSink(val sink: RawAsyncSink) : AsyncSink {
     @JvmField var closed: Boolean = false
@@ -74,6 +77,7 @@ internal class RealAsyncSink(val sink: RawAsyncSink) : AsyncSink {
         checkNotClosed()
         var totalBytesRead = 0L
         while (true) {
+            coroutineContext.ensureActive()
             val readCount: Long = source.readAtMostTo(bufferField, Segment.SIZE.toLong())
             if (readCount == -1L) break
             totalBytesRead += readCount
@@ -86,6 +90,7 @@ internal class RealAsyncSink(val sink: RawAsyncSink) : AsyncSink {
         checkNotClosed()
         var totalBytesRead = 0L
         while (true) {
+            coroutineContext.ensureActive()
             val readCount: Long = source.readAtMostTo(bufferField, Segment.SIZE.toLong())
             if (readCount == -1L) break
             totalBytesRead += readCount
@@ -99,6 +104,7 @@ internal class RealAsyncSink(val sink: RawAsyncSink) : AsyncSink {
         require(byteCount >= 0) { "byteCount: $byteCount" }
         var remainingByteCount = byteCount
         while (remainingByteCount > 0L) {
+            coroutineContext.ensureActive()
             val read = source.readAtMostTo(bufferField, remainingByteCount)
             if (read == -1L) {
                 val bytesRead = byteCount - remainingByteCount
@@ -116,6 +122,7 @@ internal class RealAsyncSink(val sink: RawAsyncSink) : AsyncSink {
         require(byteCount >= 0) { "byteCount: $byteCount" }
         var remainingByteCount = byteCount
         while (remainingByteCount > 0L) {
+            coroutineContext.ensureActive()
             val read = source.readAtMostTo(bufferField, remainingByteCount)
             if (read == -1L) {
                 val bytesRead = byteCount - remainingByteCount

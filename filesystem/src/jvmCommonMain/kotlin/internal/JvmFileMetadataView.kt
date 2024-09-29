@@ -23,7 +23,7 @@ import java.nio.file.attribute.BasicFileAttributeView
 import java.nio.file.attribute.BasicFileAttributes
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runInterruptible
+import kotlinx.coroutines.withContext
 import kotlinx.io.IOException
 import me.zhanghai.kotlin.filesystem.FileMetadata
 import me.zhanghai.kotlin.filesystem.FileMetadataOption
@@ -44,7 +44,7 @@ private constructor(private val file: Path, vararg options: JavaLinkOption) : Fi
 
     @Throws(CancellationException::class, IOException::class)
     override suspend fun readMetadata(): FileMetadata =
-        runInterruptible(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             try {
                 JvmFileMetadata(fileAttributeView.readAttributes())
             } catch (e: JavaFileSystemException) {
@@ -58,7 +58,7 @@ private constructor(private val file: Path, vararg options: JavaLinkOption) : Fi
         lastAccessTime: FileTime?,
         creationTime: FileTime?,
     ) {
-        runInterruptible(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             try {
                 fileAttributeView.setTimes(lastModificationTime, lastAccessTime, creationTime)
             } catch (e: JavaFileSystemException) {

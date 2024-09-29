@@ -24,7 +24,7 @@ import java.nio.file.attribute.BasicFileAttributeView
 import java.nio.file.attribute.PosixFileAttributeView
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runInterruptible
+import kotlinx.coroutines.withContext
 import kotlinx.io.IOException
 import me.zhanghai.kotlin.filesystem.FileMetadataOption
 import me.zhanghai.kotlin.filesystem.FileTime
@@ -42,7 +42,7 @@ private constructor(private val file: Path, private vararg val options: LinkOpti
     override suspend fun readMetadata(): PosixFileMetadata {
         val javaFile = file.toJavaPath()
         val attributes =
-            runInterruptible(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 try {
                     Files.readAttributes(javaFile, ATTRIBUTES, *options)
                 } catch (e: JavaFileSystemException) {
@@ -140,7 +140,7 @@ private constructor(private val file: Path, private vararg val options: LinkOpti
         val javaFile = file.toJavaPath()
         val attributeView =
             Files.getFileAttributeView(javaFile, BasicFileAttributeView::class.java, *options)
-        runInterruptible(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             try {
                 attributeView.setTimes(lastModificationTime, lastAccessTime, creationTime)
             } catch (e: JavaFileSystemException) {
@@ -170,7 +170,7 @@ private constructor(private val file: Path, private vararg val options: LinkOpti
                         PosixModeBit.OTHERS_EXECUTE -> S_IXOTH
                     }
             }
-        runInterruptible(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             try {
                 Files.setAttribute(javaFile, ATTRIBUTE_MODE, modeInt, *options)
             } catch (e: JavaFileSystemException) {
@@ -183,7 +183,7 @@ private constructor(private val file: Path, private vararg val options: LinkOpti
     override suspend fun setOwnership(userId: Int, groupId: Int) {
         val javaFile = file.toJavaPath()
         if (userId != -1) {
-            runInterruptible(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 try {
                     Files.setAttribute(javaFile, ATTRIBUTE_UID, userId, *options)
                 } catch (e: JavaFileSystemException) {
@@ -192,7 +192,7 @@ private constructor(private val file: Path, private vararg val options: LinkOpti
             }
         }
         if (groupId != -1) {
-            runInterruptible(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 try {
                     Files.setAttribute(javaFile, ATTRIBUTE_GID, groupId, *options)
                 } catch (e: JavaFileSystemException) {

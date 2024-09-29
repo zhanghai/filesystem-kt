@@ -20,7 +20,7 @@ import java.nio.file.FileStore as JavaFileStore
 import java.nio.file.FileSystemException as JavaFileSystemException
 import java.nio.file.Files
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runInterruptible
+import kotlinx.coroutines.withContext
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.encodeToByteString
 import me.zhanghai.kotlin.filesystem.FileStore
@@ -35,7 +35,7 @@ private constructor(private val file: Path, private val fileStore: JavaFileStore
         var totalSpace = 0L
         var freeSpace = 0L
         var availableSpace = 0L
-        runInterruptible(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             try {
                 blockSize = fileStore.blockSize
                 totalSpace = fileStore.totalSpace
@@ -54,7 +54,7 @@ private constructor(private val file: Path, private val fileStore: JavaFileStore
         suspend operator fun invoke(file: Path): JvmFileStore {
             val javaFile = file.toJavaPath()
             val javaFileStore =
-                runInterruptible(Dispatchers.IO) {
+                withContext(Dispatchers.IO) {
                     try {
                         Files.getFileStore(javaFile)
                     } catch (e: JavaFileSystemException) {

@@ -26,7 +26,7 @@ import java.nio.file.StandardCopyOption
 import java.nio.file.attribute.FileAttribute
 import java.nio.file.spi.FileSystemProvider
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runInterruptible
+import kotlinx.coroutines.withContext
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.decodeToString
 import kotlinx.io.bytestring.encodeToByteString
@@ -52,7 +52,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         file.requireSameSchemeAs(this)
         val javaFile = file.toJavaPath()
         val javaRealPath =
-            runInterruptible(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 try {
                     javaFile.toRealPath()
                 } catch (e: JavaFileSystemException) {
@@ -65,7 +65,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
     override suspend fun checkAccess(file: Path, vararg modes: AccessMode) {
         file.requireSameSchemeAs(this)
         val javaFile = file.toJavaPath()
-        runInterruptible(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             try {
                 javaFile.provider.checkAccess(javaFile, *modes)
             } catch (e: JavaFileSystemException) {
@@ -102,7 +102,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         directory.requireSameSchemeAs(this)
         val javaDirectory = directory.toJavaPath()
         val javaAttributes = options.toJavaAttributes()
-        runInterruptible(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             try {
                 Files.createDirectory(javaDirectory, *javaAttributes)
             } catch (e: JavaFileSystemException) {
@@ -115,7 +115,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         link.requireSameSchemeAs(this)
         val javaLink = link.toJavaPath()
         val javaTarget =
-            runInterruptible(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 try {
                     Files.readSymbolicLink(javaLink)
                 } catch (e: JavaFileSystemException) {
@@ -134,7 +134,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         val javaLink = link.toJavaPath()
         val javaTarget = Paths.get(target.decodeToString())
         val javaAttributes = options.toJavaAttributes()
-        runInterruptible(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             try {
                 Files.createSymbolicLink(javaLink, javaTarget, *javaAttributes)
             } catch (e: JavaFileSystemException) {
@@ -148,7 +148,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         existing.requireSameSchemeAs(this)
         val javaLink = link.toJavaPath()
         val javaExisting = existing.toJavaPath()
-        return runInterruptible(Dispatchers.IO) {
+        return withContext(Dispatchers.IO) {
             try {
                 Files.createLink(javaLink, javaExisting)
             } catch (e: JavaFileSystemException) {
@@ -160,7 +160,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
     override suspend fun delete(file: Path) {
         file.requireSameSchemeAs(this)
         val javaFile = file.toJavaPath()
-        runInterruptible(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             try {
                 Files.delete(javaFile)
             } catch (e: JavaFileSystemException) {
@@ -174,7 +174,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         file2.requireSameSchemeAs(this)
         val javaFile1 = file1.toJavaPath()
         val javaFile2 = file2.toJavaPath()
-        return runInterruptible(Dispatchers.IO) {
+        return withContext(Dispatchers.IO) {
             try {
                 Files.isSameFile(javaFile1, javaFile2)
             } catch (e: JavaFileSystemException) {
@@ -189,7 +189,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         val javaSource = source.toJavaPath()
         val javaTarget = target.toJavaPath()
         val javaOptions = options.toJavaOptions()
-        runInterruptible(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             try {
                 Files.copy(javaSource, javaTarget, *javaOptions)
             } catch (e: JavaFileSystemException) {
@@ -204,7 +204,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         val javaSource = source.toJavaPath()
         val javaTarget = target.toJavaPath()
         val javaOptions = options.toJavaOptions()
-        runInterruptible(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             try {
                 Files.move(javaSource, javaTarget, *javaOptions)
             } catch (e: JavaFileSystemException) {

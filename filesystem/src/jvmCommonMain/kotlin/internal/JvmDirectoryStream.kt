@@ -21,7 +21,7 @@ import java.nio.file.FileSystemException as JavaFileSystemException
 import java.nio.file.Files
 import java.nio.file.Path as JavaPath
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runInterruptible
+import kotlinx.coroutines.withContext
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.encodeToByteString
 import me.zhanghai.kotlin.filesystem.BasicDirectoryStreamOption
@@ -43,7 +43,7 @@ private constructor(
 
     override suspend fun read(): DirectoryEntry? {
         val hasNext =
-            runInterruptible(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 try {
                     directoryIterator.hasNext()
                 } catch (e: JavaFileSystemException) {
@@ -54,7 +54,7 @@ private constructor(
             return null
         }
         val javaFile =
-            runInterruptible(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 try {
                     directoryIterator.next()
                 } catch (e: JavaFileSystemException) {
@@ -84,7 +84,7 @@ private constructor(
     }
 
     override suspend fun close() {
-        runInterruptible(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             try {
                 directoryStream.close()
             } catch (e: JavaFileSystemException) {
@@ -100,7 +100,7 @@ private constructor(
         ): JvmDirectoryStream {
             val javaDirectory = directory.toJavaPath()
             val javaDirectoryStream =
-                runInterruptible(Dispatchers.IO) {
+                withContext(Dispatchers.IO) {
                     try {
                         Files.newDirectoryStream(javaDirectory)
                     } catch (e: JavaFileSystemException) {

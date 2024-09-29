@@ -43,6 +43,7 @@ import kotlinx.io.Buffer
 import kotlinx.io.InternalIoApi
 import kotlinx.io.checkByteCount
 
+/** @see kotlinx.io.PeekSource */
 internal class PeekAsyncSource(private val upstream: AsyncSource) : RawAsyncSource {
     @OptIn(InternalIoApi::class) private val buffer = upstream.buffer
     private var expectedSegment = buffer.head

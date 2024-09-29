@@ -39,6 +39,8 @@
 
 package me.zhanghai.kotlin.filesystem.io
 
+import kotlin.coroutines.coroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.io.Buffer
 import kotlinx.io.EOFException
 import kotlinx.io.Segment
@@ -70,6 +72,7 @@ public suspend fun Buffer.write(source: RawAsyncSource, byteCount: Long) {
     checkByteCount(byteCount)
     var remainingByteCount = byteCount
     while (remainingByteCount > 0L) {
+        coroutineContext.ensureActive()
         val read = source.readAtMostTo(this, remainingByteCount)
         if (read == -1L) {
             throw EOFException(
@@ -85,6 +88,7 @@ public suspend fun Buffer.write(source: RawAsyncSource, byteCount: Long) {
 public suspend fun Buffer.transferFrom(source: RawAsyncSource): Long {
     var totalBytesRead = 0L
     while (true) {
+        coroutineContext.ensureActive()
         val readCount = source.readAtMostTo(this, Segment.SIZE.toLong())
         if (readCount == -1L) break
         totalBytesRead += readCount

@@ -39,7 +39,9 @@
 
 package me.zhanghai.kotlin.filesystem.io
 
+import kotlin.coroutines.coroutineContext
 import kotlin.jvm.JvmField
+import kotlinx.coroutines.ensureActive
 import kotlinx.io.Buffer
 import kotlinx.io.EOFException
 import kotlinx.io.InternalIoApi
@@ -48,6 +50,7 @@ import kotlinx.io.Segment
 import kotlinx.io.checkBounds
 import kotlinx.io.minOf
 
+/** @see kotlinx.io.RealSource */
 internal class RealAsyncSource(val source: RawAsyncSource) : AsyncSource {
     @JvmField var closed: Boolean = false
     private val bufferField = Buffer()
@@ -84,6 +87,7 @@ internal class RealAsyncSource(val source: RawAsyncSource) : AsyncSource {
         checkNotClosed()
         require(byteCount >= 0L) { "byteCount: $byteCount" }
         while (bufferField.size < byteCount) {
+            coroutineContext.ensureActive()
             if (source.readAtMostTo(bufferField, Segment.SIZE.toLong()) == -1L) return false
         }
         return true
@@ -130,6 +134,7 @@ internal class RealAsyncSource(val source: RawAsyncSource) : AsyncSource {
     override suspend fun transferTo(sink: RawAsyncSink): Long {
         var totalBytesWritten: Long = 0
         while (source.readAtMostTo(bufferField, Segment.SIZE.toLong()) != -1L) {
+            coroutineContext.ensureActive()
             val emitByteCount = bufferField.completeSegmentByteCount()
             if (emitByteCount > 0L) {
                 totalBytesWritten += emitByteCount
@@ -146,6 +151,7 @@ internal class RealAsyncSource(val source: RawAsyncSource) : AsyncSource {
     override suspend fun transferTo(sink: RawSink): Long {
         var totalBytesWritten: Long = 0
         while (source.readAtMostTo(bufferField, Segment.SIZE.toLong()) != -1L) {
+            coroutineContext.ensureActive()
             val emitByteCount = bufferField.completeSegmentByteCount()
             if (emitByteCount > 0L) {
                 totalBytesWritten += emitByteCount
@@ -179,6 +185,7 @@ internal class RealAsyncSource(val source: RawAsyncSource) : AsyncSource {
         require(byteCount >= 0) { "byteCount: $byteCount" }
         var remainingByteCount = byteCount
         while (remainingByteCount > 0) {
+            coroutineContext.ensureActive()
             if (
                 bufferField.size == 0L &&
                     source.readAtMostTo(bufferField, Segment.SIZE.toLong()) == -1L

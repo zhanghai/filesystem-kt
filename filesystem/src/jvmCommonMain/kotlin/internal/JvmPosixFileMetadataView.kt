@@ -26,17 +26,18 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import kotlinx.io.IOException
+import me.zhanghai.kotlin.filesystem.FileMetadataOption
 import me.zhanghai.kotlin.filesystem.FileTime
 import me.zhanghai.kotlin.filesystem.Path
+import me.zhanghai.kotlin.filesystem.internal.JvmFileMetadataView.Companion.toJavaOptions
 import me.zhanghai.kotlin.filesystem.posix.PosixFileMetadata
 import me.zhanghai.kotlin.filesystem.posix.PosixFileMetadataView
 import me.zhanghai.kotlin.filesystem.posix.PosixFileType
 import me.zhanghai.kotlin.filesystem.posix.PosixModeBit
 
-internal class JvmPosixFileMetadataView(
-    private val file: Path,
-    private vararg val options: LinkOption,
-) : PosixFileMetadataView {
+internal class JvmPosixFileMetadataView
+private constructor(private val file: Path, private vararg val options: LinkOption) :
+    PosixFileMetadataView {
     @Throws(CancellationException::class, IOException::class)
     override suspend fun readMetadata(): PosixFileMetadata {
         val javaFile = file.toJavaPath()
@@ -257,6 +258,14 @@ internal class JvmPosixFileMetadataView(
                     false
                 }
             }
+
+        operator fun invoke(
+            file: Path,
+            vararg options: FileMetadataOption,
+        ): JvmPosixFileMetadataView {
+            val javaOptions = options.toJavaOptions()
+            return JvmPosixFileMetadataView(file, *javaOptions)
+        }
     }
 }
 

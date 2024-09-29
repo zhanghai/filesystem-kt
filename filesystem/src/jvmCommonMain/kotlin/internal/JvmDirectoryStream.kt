@@ -18,19 +18,23 @@ package me.zhanghai.kotlin.filesystem.internal
 
 import java.nio.file.DirectoryStream as JavaDirectoryStream
 import java.nio.file.FileSystemException as JavaFileSystemException
-import java.nio.file.LinkOption
+import java.nio.file.Files
 import java.nio.file.Path as JavaPath
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.encodeToByteString
+import me.zhanghai.kotlin.filesystem.BasicDirectoryStreamOption
 import me.zhanghai.kotlin.filesystem.DirectoryEntry
 import me.zhanghai.kotlin.filesystem.DirectoryEntryWithMetadata
 import me.zhanghai.kotlin.filesystem.DirectoryStream
+import me.zhanghai.kotlin.filesystem.DirectoryStreamOption
 import me.zhanghai.kotlin.filesystem.FileMetadata
+import me.zhanghai.kotlin.filesystem.LinkOption
 import me.zhanghai.kotlin.filesystem.Path
 
-internal class JvmDirectoryStream(
+internal class JvmDirectoryStream
+private constructor(
     private val directory: Path,
     private val directoryStream: JavaDirectoryStream<JavaPath>,
     private val readMetadata: Boolean,
@@ -65,8 +69,8 @@ internal class JvmDirectoryStream(
         val metadataView =
             when {
                 JvmPosixFileMetadataView.isSupported ->
-                    JvmPosixFileMetadataView(file, LinkOption.NOFOLLOW_LINKS)
-                else -> JvmFileMetadataView(file, LinkOption.NOFOLLOW_LINKS)
+                    JvmPosixFileMetadataView(file, LinkOption.NO_FOLLOW_LINKS)
+                else -> JvmFileMetadataView(file, LinkOption.NO_FOLLOW_LINKS)
             }
         var metadataException: Throwable? = null
         val metadata =
@@ -86,6 +90,32 @@ internal class JvmDirectoryStream(
             } catch (e: JavaFileSystemException) {
                 throw e.toFileSystemException(directory)
             }
+        }
+    }
+
+    companion object {
+        suspend operator fun invoke(
+            directory: Path,
+            vararg options: DirectoryStreamOption,
+        ): JvmDirectoryStream {
+            val javaDirectory = directory.toJavaPath()
+            val javaDirectoryStream =
+                runInterruptible(Dispatchers.IO) {
+                    try {
+                        Files.newDirectoryStream(javaDirectory)
+                    } catch (e: JavaFileSystemException) {
+                        throw e.toFileSystemException(directory)
+                    }
+                }
+            var readMetadata = false
+            for (option in options) {
+                when (option) {
+                    BasicDirectoryStreamOption.READ_TYPE,
+                    BasicDirectoryStreamOption.READ_METADATA -> readMetadata = true
+                    else -> throw UnsupportedOperationException("Unsupported option $option")
+                }
+            }
+            return JvmDirectoryStream(directory, javaDirectoryStream, readMetadata)
         }
     }
 }

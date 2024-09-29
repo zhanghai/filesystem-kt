@@ -33,8 +33,8 @@ import me.zhanghai.kotlin.filesystem.FileType
 import me.zhanghai.kotlin.filesystem.LinkOption
 import me.zhanghai.kotlin.filesystem.Path
 
-internal open class JvmFileMetadataView(private val file: Path, vararg options: JavaLinkOption) :
-    FileMetadataView {
+internal open class JvmFileMetadataView
+private constructor(private val file: Path, vararg options: JavaLinkOption) : FileMetadataView {
     private val fileAttributeView =
         Files.getFileAttributeView(
             file.toJavaPath(),
@@ -70,6 +70,11 @@ internal open class JvmFileMetadataView(private val file: Path, vararg options: 
     override suspend fun close() {}
 
     companion object {
+        operator fun invoke(file: Path, vararg options: FileMetadataOption): JvmFileMetadataView {
+            val javaOptions = options.toJavaOptions()
+            return JvmFileMetadataView(file, *javaOptions)
+        }
+
         fun Array<out FileMetadataOption>.toJavaOptions(): Array<JavaLinkOption> {
             val javaOptionSet = mutableListOf<JavaLinkOption>()
             for (option in this) {

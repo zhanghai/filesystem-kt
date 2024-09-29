@@ -21,16 +21,28 @@ import java.io.OutputStream
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
 import java.nio.file.FileSystemException as JavaFileSystemException
+import java.nio.file.LinkOption as JavaLinkOption
+import java.nio.file.OpenOption
+import java.nio.file.StandardOpenOption
+import java.nio.file.attribute.FileAttribute
+import java.nio.file.attribute.PosixFilePermission
+import java.nio.file.attribute.PosixFilePermissions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import kotlinx.io.Buffer
 import kotlinx.io.asSource
 import kotlinx.io.readTo
+import me.zhanghai.kotlin.filesystem.BasicFileContentOption
+import me.zhanghai.kotlin.filesystem.CreateFileOption
 import me.zhanghai.kotlin.filesystem.FileContent
+import me.zhanghai.kotlin.filesystem.FileContentOption
+import me.zhanghai.kotlin.filesystem.LinkOption
 import me.zhanghai.kotlin.filesystem.Path
+import me.zhanghai.kotlin.filesystem.posix.PosixModeBit
+import me.zhanghai.kotlin.filesystem.posix.PosixModeOption
 
-internal class JvmFileContent(private val file: Path, private val fileChannel: FileChannel) :
-    FileContent {
+internal class JvmFileContent
+private constructor(private val file: Path, private val fileChannel: FileChannel) : FileContent {
     override suspend fun readAtMostTo(position: Long, sink: Buffer, byteCount: Long): Long {
         require(position >= 0) { "position ($position) < 0" }
         require(byteCount >= 0) { "byteCount ($byteCount) < 0" }
@@ -137,5 +149,79 @@ internal class JvmFileContent(private val file: Path, private val fileChannel: F
                 throw e.toFileSystemException(file)
             }
         }
+    }
+
+    companion object {
+        suspend operator fun invoke(file: Path, vararg options: FileContentOption): JvmFileContent {
+            val javaFile = file.toJavaPath()
+            val (javaOptions, javaAttributes) = options.toJavaOptionsAndAttributes()
+            val channel =
+                runInterruptible(Dispatchers.IO) {
+                    try {
+                        FileChannel.open(javaFile, javaOptions, *javaAttributes)
+                    } catch (e: JavaFileSystemException) {
+                        throw e.toFileSystemException(file)
+                    }
+                }
+            return JvmFileContent(file, channel)
+        }
+
+        private fun Array<out FileContentOption>.toJavaOptionsAndAttributes():
+            Pair<Set<OpenOption>, Array<out FileAttribute<*>>> {
+            val javaOptions = mutableSetOf<OpenOption>()
+            val javaAttributeList = mutableListOf<FileAttribute<*>>()
+            for (option in this) {
+                when (option) {
+                    BasicFileContentOption.READ -> javaOptions += StandardOpenOption.READ
+                    BasicFileContentOption.WRITE -> javaOptions += StandardOpenOption.WRITE
+                    BasicFileContentOption.APPEND -> javaOptions += StandardOpenOption.APPEND
+                    BasicFileContentOption.TRUNCATE_EXISTING ->
+                        javaOptions += StandardOpenOption.TRUNCATE_EXISTING
+                    BasicFileContentOption.CREATE -> javaOptions += StandardOpenOption.CREATE
+                    BasicFileContentOption.CREATE_NEW ->
+                        javaOptions += StandardOpenOption.CREATE_NEW
+                    LinkOption.NO_FOLLOW_LINKS -> javaOptions += JavaLinkOption.NOFOLLOW_LINKS
+                    is CreateFileOption -> javaAttributeList += option.toJavaAttribute()
+                    else -> throw UnsupportedOperationException("Unsupported option $option")
+                }
+            }
+            val javaAttributes = javaAttributeList.toTypedArray()
+            return javaOptions to javaAttributes
+        }
+
+        fun CreateFileOption.toJavaAttribute(): FileAttribute<*> =
+            when (this) {
+                is PosixModeOption -> {
+                    val permissions = mutableSetOf<PosixFilePermission>()
+                    for (modeBit in mode) {
+                        when (modeBit) {
+                            PosixModeBit.SET_USER_ID,
+                            PosixModeBit.SET_GROUP_ID,
+                            PosixModeBit.STICKY ->
+                                throw UnsupportedOperationException(
+                                    "Unsupported POSIX mode bit $modeBit"
+                                )
+                            PosixModeBit.OWNER_READ -> permissions += PosixFilePermission.OWNER_READ
+                            PosixModeBit.OWNER_WRITE ->
+                                permissions += PosixFilePermission.OWNER_WRITE
+                            PosixModeBit.OWNER_EXECUTE ->
+                                permissions += PosixFilePermission.OWNER_EXECUTE
+                            PosixModeBit.GROUP_READ -> permissions += PosixFilePermission.GROUP_READ
+                            PosixModeBit.GROUP_WRITE ->
+                                permissions += PosixFilePermission.GROUP_WRITE
+                            PosixModeBit.GROUP_EXECUTE ->
+                                permissions += PosixFilePermission.GROUP_EXECUTE
+                            PosixModeBit.OTHERS_READ ->
+                                permissions += PosixFilePermission.OTHERS_READ
+                            PosixModeBit.OTHERS_WRITE ->
+                                permissions += PosixFilePermission.OTHERS_WRITE
+                            PosixModeBit.OTHERS_EXECUTE ->
+                                permissions += PosixFilePermission.OTHERS_EXECUTE
+                        }
+                    }
+                    PosixFilePermissions.asFileAttribute(permissions)
+                }
+                else -> throw UnsupportedOperationException("Unsupported option $this")
+            }
     }
 }

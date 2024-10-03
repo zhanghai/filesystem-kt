@@ -7,9 +7,12 @@ package me.zhanghai.kotlin.filesystem
 public class FileSystemMismatchException(public val path: Path, public val expectedScheme: String) :
     IllegalArgumentException("Path \"$path\" doesn't have the expected scheme \"$expectedScheme\"")
 
-public fun Path.requireSameSchemeAs(fileSystem: FileSystem) {
-    val fileSystemScheme = fileSystem.scheme
-    if (scheme != fileSystemScheme) {
-        throw FileSystemMismatchException(this, fileSystemScheme)
+public fun Path.requireScheme(scheme: String) {
+    if (this.scheme != scheme) {
+        throw FileSystemMismatchException(this, scheme)
     }
+}
+
+public fun Path.requireSameSchemeAs(fileSystem: FileSystem) {
+    requireScheme(fileSystem.scheme)
 }

@@ -117,6 +117,9 @@ public interface FileSystem {
     @Throws(CancellationException::class, IOException::class)
     public suspend fun openFileStore(file: Path): FileStore
 
+    @Throws(CancellationException::class, IOException::class)
+    public suspend fun openFileWatcher(): FileWatcher
+
     public companion object {
         @PublishedApi
         internal val OPEN_SINK_OPTIONS_DEFAULT: Array<FileContentOption> =

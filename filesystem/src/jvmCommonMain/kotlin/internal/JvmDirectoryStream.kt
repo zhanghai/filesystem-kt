@@ -20,8 +20,10 @@ import java.nio.file.DirectoryStream as JavaDirectoryStream
 import java.nio.file.FileSystemException as JavaFileSystemException
 import java.nio.file.Files
 import java.nio.file.Path as JavaPath
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.io.IOException
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.encodeToByteString
 import me.zhanghai.kotlin.filesystem.BasicDirectoryStreamOption
@@ -41,6 +43,7 @@ private constructor(
 ) : DirectoryStream {
     private val directoryIterator = directoryStream.iterator()
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun read(): DirectoryEntry? {
         val hasNext =
             withContext(Dispatchers.IO) {
@@ -83,6 +86,7 @@ private constructor(
         return JvmDirectoryEntryWithMetadata(name, metadata, metadataException)
     }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun close() {
         withContext(Dispatchers.IO) {
             try {
@@ -94,6 +98,7 @@ private constructor(
     }
 
     companion object {
+        @Throws(CancellationException::class, IOException::class)
         suspend operator fun invoke(
             directory: Path,
             vararg options: DirectoryStreamOption,

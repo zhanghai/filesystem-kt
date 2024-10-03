@@ -14,24 +14,12 @@
  * limitations under the License.
  */
 
-package me.zhanghai.kotlin.filesystem
+package me.zhanghai.kotlin.filesystem.io
+
+import kotlinx.coroutines.flow.Flow
 
 /**
- * Options for handling a symbolic link.
- *
- * @see FileSystem.copy
- * @see FileSystem.move
- * @see FileSystem.openContent
- * @see FileSystem.openMetadataView
- * @see FileSystem.readMetadata
- * @see FileWatcher.watch
+ * A _[hot][kotlinx.coroutines.flow.SharedFlow]_ [Flow] that is
+ * [asynchronously closeable][AsyncCloseable].
  */
-public enum class LinkOption :
-    CopyFileOption, FileContentOption, FileMetadataOption, WatchFileOption {
-    /**
-     * Do not follow symbolic links.
-     *
-     * This option is ignored on file systems where symbolic links are not supported.
-     */
-    NO_FOLLOW_LINKS
-}
+public interface AsyncCloseableFlow<T> : AsyncCloseable, Flow<T>

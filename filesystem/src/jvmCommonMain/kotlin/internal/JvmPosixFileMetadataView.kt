@@ -202,7 +202,7 @@ private constructor(private val file: Path, private vararg val options: LinkOpti
         }
     }
 
-    override suspend fun close() {}
+    @Throws(CancellationException::class, IOException::class) override suspend fun close() {}
 
     companion object {
         private const val ATTRIBUTE_VIEW_NAME_UNIX = "unix"
@@ -259,6 +259,7 @@ private constructor(private val file: Path, private vararg val options: LinkOpti
                 }
             }
 
+        @Throws(CancellationException::class, IOException::class)
         operator fun invoke(
             file: Path,
             vararg options: FileMetadataOption,

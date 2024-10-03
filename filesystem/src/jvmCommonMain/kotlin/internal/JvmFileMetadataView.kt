@@ -70,6 +70,7 @@ private constructor(private val file: Path, vararg options: JavaLinkOption) : Fi
     override suspend fun close() {}
 
     companion object {
+        @Throws(CancellationException::class, IOException::class)
         operator fun invoke(file: Path, vararg options: FileMetadataOption): JvmFileMetadataView {
             val javaOptions = options.toJavaOptions()
             return JvmFileMetadataView(file, *javaOptions)

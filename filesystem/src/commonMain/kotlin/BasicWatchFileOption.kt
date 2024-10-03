@@ -17,21 +17,11 @@
 package me.zhanghai.kotlin.filesystem
 
 /**
- * Options for handling a symbolic link.
+ * Basic options for watching a file.
  *
- * @see FileSystem.copy
- * @see FileSystem.move
- * @see FileSystem.openContent
- * @see FileSystem.openMetadataView
- * @see FileSystem.readMetadata
  * @see FileWatcher.watch
  */
-public enum class LinkOption :
-    CopyFileOption, FileContentOption, FileMetadataOption, WatchFileOption {
-    /**
-     * Do not follow symbolic links.
-     *
-     * This option is ignored on file systems where symbolic links are not supported.
-     */
-    NO_FOLLOW_LINKS
+public enum class BasicWatchFileOption : WatchFileOption {
+    /** Watch the entries of a directory instead of the directory itself. */
+    WATCH_DIRECTORY_ENTRIES
 }

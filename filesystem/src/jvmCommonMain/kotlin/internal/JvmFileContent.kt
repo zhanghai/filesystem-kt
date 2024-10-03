@@ -16,12 +16,12 @@
 
 package me.zhanghai.kotlin.filesystem.internal
 
-import java.nio.file.FileSystemException as JavaFileSystemException
-import java.nio.file.LinkOption as JavaLinkOption
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
+import java.nio.file.FileSystemException as JavaFileSystemException
+import java.nio.file.LinkOption as JavaLinkOption
 import java.nio.file.OpenOption
 import java.nio.file.StandardOpenOption
 import java.nio.file.attribute.FileAttribute
@@ -32,6 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.withContext
 import kotlinx.io.Buffer
+import kotlinx.io.IOException
 import kotlinx.io.asSource
 import kotlinx.io.readTo
 import me.zhanghai.kotlin.filesystem.BasicFileContentOption
@@ -45,6 +46,7 @@ import me.zhanghai.kotlin.filesystem.posix.PosixModeOption
 
 internal class JvmFileContent
 private constructor(private val file: Path, private val fileChannel: FileChannel) : FileContent {
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun readAtMostTo(position: Long, sink: Buffer, byteCount: Long): Long {
         require(position >= 0) { "position ($position) < 0" }
         require(byteCount >= 0) { "byteCount ($byteCount) < 0" }
@@ -79,6 +81,7 @@ private constructor(private val file: Path, private val fileChannel: FileChannel
         }
     }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun write(position: Long, source: Buffer, byteCount: Long) {
         require(position >= 0) { "position ($position) < 0" }
         require(byteCount >= 0) { "byteCount ($byteCount) < 0" }
@@ -115,6 +118,7 @@ private constructor(private val file: Path, private val fileChannel: FileChannel
         }
     }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun getSize(): Long =
         runInterruptible(Dispatchers.IO) {
             try {
@@ -124,6 +128,7 @@ private constructor(private val file: Path, private val fileChannel: FileChannel
             }
         }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun setSize(size: Long) {
         runInterruptible(Dispatchers.IO) {
             try {
@@ -139,6 +144,7 @@ private constructor(private val file: Path, private val fileChannel: FileChannel
         }
     }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun sync() {
         runInterruptible(Dispatchers.IO) {
             try {
@@ -149,6 +155,7 @@ private constructor(private val file: Path, private val fileChannel: FileChannel
         }
     }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun close() {
         withContext(Dispatchers.IO) {
             try {
@@ -160,6 +167,7 @@ private constructor(private val file: Path, private val fileChannel: FileChannel
     }
 
     companion object {
+        @Throws(CancellationException::class, IOException::class)
         suspend operator fun invoke(file: Path, vararg options: FileContentOption): JvmFileContent {
             val javaFile = file.toJavaPath()
             val (javaOptions, javaAttributes) = options.toJavaOptionsAndAttributes()

@@ -19,8 +19,10 @@ package me.zhanghai.kotlin.filesystem.internal
 import java.nio.file.FileStore as JavaFileStore
 import java.nio.file.FileSystemException as JavaFileSystemException
 import java.nio.file.Files
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.io.IOException
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.encodeToByteString
 import me.zhanghai.kotlin.filesystem.FileStore
@@ -29,6 +31,7 @@ import me.zhanghai.kotlin.filesystem.Path
 
 internal class JvmFileStore
 private constructor(private val file: Path, private val fileStore: JavaFileStore) : FileStore {
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun readMetadata(): FileStoreMetadata {
         val type = fileStore.type().encodeToByteString()
         var blockSize = 0L
@@ -48,9 +51,10 @@ private constructor(private val file: Path, private val fileStore: JavaFileStore
         return JvmFileStoreMetadata(type, blockSize, totalSpace, freeSpace, availableSpace)
     }
 
-    override suspend fun close() {}
+    @Throws(CancellationException::class, IOException::class) override suspend fun close() {}
 
     companion object {
+        @Throws(CancellationException::class, IOException::class)
         suspend operator fun invoke(file: Path): JvmFileStore {
             val javaFile = file.toJavaPath()
             val javaFileStore =

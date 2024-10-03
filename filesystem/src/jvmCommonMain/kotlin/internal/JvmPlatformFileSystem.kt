@@ -25,8 +25,10 @@ import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 import java.nio.file.attribute.FileAttribute
 import java.nio.file.spi.FileSystemProvider
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.io.IOException
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.decodeToString
 import kotlinx.io.bytestring.encodeToByteString
@@ -41,6 +43,7 @@ import me.zhanghai.kotlin.filesystem.FileContentOption
 import me.zhanghai.kotlin.filesystem.FileMetadataOption
 import me.zhanghai.kotlin.filesystem.FileMetadataView
 import me.zhanghai.kotlin.filesystem.FileStore
+import me.zhanghai.kotlin.filesystem.FileWatcher
 import me.zhanghai.kotlin.filesystem.LinkOption
 import me.zhanghai.kotlin.filesystem.Path
 import me.zhanghai.kotlin.filesystem.PlatformFileSystem
@@ -48,6 +51,7 @@ import me.zhanghai.kotlin.filesystem.internal.JvmFileContent.Companion.toJavaAtt
 import me.zhanghai.kotlin.filesystem.requireSameSchemeAs
 
 internal class JvmPlatformFileSystem : PlatformFileSystem {
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun getRealPath(file: Path): Path {
         file.requireSameSchemeAs(this)
         val javaFile = file.toJavaPath()
@@ -62,6 +66,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         return javaRealPath.toPath()
     }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun checkAccess(file: Path, vararg modes: AccessMode) {
         file.requireSameSchemeAs(this)
         val javaFile = file.toJavaPath()
@@ -74,6 +79,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         }
     }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun openMetadataView(
         file: Path,
         vararg options: FileMetadataOption,
@@ -85,11 +91,13 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         }
     }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun openContent(file: Path, vararg options: FileContentOption): FileContent {
         file.requireSameSchemeAs(this)
         return JvmFileContent(file, *options)
     }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun openDirectoryStream(
         directory: Path,
         vararg options: DirectoryStreamOption,
@@ -98,6 +106,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         return JvmDirectoryStream(directory, *options)
     }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun createDirectory(directory: Path, vararg options: CreateFileOption) {
         directory.requireSameSchemeAs(this)
         val javaDirectory = directory.toJavaPath()
@@ -111,6 +120,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         }
     }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun readSymbolicLink(link: Path): ByteString {
         link.requireSameSchemeAs(this)
         val javaLink = link.toJavaPath()
@@ -125,6 +135,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         return javaTarget.toString().encodeToByteString()
     }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun createSymbolicLink(
         link: Path,
         target: ByteString,
@@ -143,6 +154,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         }
     }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun createHardLink(link: Path, existing: Path) {
         link.requireSameSchemeAs(this)
         existing.requireSameSchemeAs(this)
@@ -157,6 +169,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         }
     }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun delete(file: Path) {
         file.requireSameSchemeAs(this)
         val javaFile = file.toJavaPath()
@@ -169,6 +182,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         }
     }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun isSameFile(file1: Path, file2: Path): Boolean {
         file1.requireSameSchemeAs(this)
         file2.requireSameSchemeAs(this)
@@ -183,6 +197,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         }
     }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun copy(source: Path, target: Path, vararg options: CopyFileOption) {
         source.requireSameSchemeAs(this)
         target.requireSameSchemeAs(this)
@@ -198,6 +213,7 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         }
     }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun move(source: Path, target: Path, vararg options: CopyFileOption) {
         source.requireSameSchemeAs(this)
         target.requireSameSchemeAs(this)
@@ -213,10 +229,14 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         }
     }
 
+    @Throws(CancellationException::class, IOException::class)
     override suspend fun openFileStore(file: Path): FileStore {
         file.requireSameSchemeAs(this)
         return JvmFileStore(file)
     }
+
+    @Throws(CancellationException::class, IOException::class)
+    override suspend fun openFileWatcher(): FileWatcher = JvmFileWatcher()
 
     override fun getPath(platformPath: ByteString): Path =
         Paths.get(platformPath.decodeToString()).toAbsolutePath().toPath()
@@ -226,10 +246,10 @@ internal class JvmPlatformFileSystem : PlatformFileSystem {
         return path.toJavaPath().toString().encodeToByteString()
     }
 
-    private val JavaPath.provider: FileSystemProvider
-        get() = fileSystem.provider()
-
     companion object {
+        private val JavaPath.provider: FileSystemProvider
+            get() = fileSystem.provider()
+
         private fun Array<out CreateFileOption>.toJavaAttributes(): Array<FileAttribute<*>> =
             map { it.toJavaAttribute() }.toTypedArray()
 

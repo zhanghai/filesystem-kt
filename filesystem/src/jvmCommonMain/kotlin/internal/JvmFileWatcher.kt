@@ -56,7 +56,7 @@ internal class JvmFileWatcher private constructor(private val watchService: Watc
     private var isClosed = false
 
     private val keyToFlowsMutex = Mutex()
-    private val keyToFlows = mutableMapOf<WatchKey, MutableList<WatchFileFlow>>()
+    private val keyToFlows = mutableMapOf<WatchKey, MutableList<Flow>>()
 
     private val poller = Poller()
 
@@ -64,7 +64,7 @@ internal class JvmFileWatcher private constructor(private val watchService: Watc
     override suspend fun watch(
         file: Path,
         vararg options: WatchFileOption,
-    ): AsyncCloseableFlow<WatchFileEvent> {
+    ): AsyncCloseableFlow<out WatchFileEvent> {
         mutex.withLock {
             check(!isClosed) { "FileWatcher is closed" }
             file.requireScheme(PlatformFileSystem.SCHEME)
@@ -122,7 +122,7 @@ internal class JvmFileWatcher private constructor(private val watchService: Watc
                             throw e.toFileSystemException()
                         }
                     }
-                WatchFileFlow(watchKey, context, file).also {
+                Flow(watchKey, context, file).also {
                     keyToFlows.getOrPut(watchKey) { mutableListOf() } += it
                 }
             }
@@ -237,11 +237,8 @@ internal class JvmFileWatcher private constructor(private val watchService: Watc
         }
     }
 
-    private inner class WatchFileFlow(
-        private val key: WatchKey,
-        val context: String?,
-        val file: Path,
-    ) : AsyncCloseableFlow<WatchFileEvent> {
+    private inner class Flow(private val key: WatchKey, val context: String?, val file: Path) :
+        AsyncCloseableFlow<WatchFileEvent> {
         private val flow = MutableSharedFlow<WatchFileEvent>()
 
         private var isClosed = false

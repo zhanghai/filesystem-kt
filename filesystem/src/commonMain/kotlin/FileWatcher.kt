@@ -56,7 +56,7 @@ public interface FileWatcher : AsyncCloseable {
     public suspend fun watch(
         file: Path,
         vararg options: WatchFileOption,
-    ): AsyncCloseableFlow<WatchFileEvent>
+    ): AsyncCloseableFlow<out WatchFileEvent>
 
     /**
      * Close this file watcher.

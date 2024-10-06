@@ -144,6 +144,31 @@ internal class JvmFileWatcher private constructor(private val watchService: Watc
         }
     }
 
+    companion object {
+        private val EVENT_KINDS =
+            arrayOf(
+                StandardWatchEventKinds.ENTRY_CREATE,
+                StandardWatchEventKinds.ENTRY_DELETE,
+                StandardWatchEventKinds.ENTRY_MODIFY,
+            )
+
+        private val pollerId = AtomicInteger()
+
+        @Throws(CancellationException::class, IOException::class)
+        suspend operator fun invoke(): JvmFileWatcher {
+            val fileSystem = FileSystems.getDefault()
+            val watchService =
+                withContext(Dispatchers.IO) {
+                    try {
+                        fileSystem.newWatchService()
+                    } catch (e: JavaFileSystemException) {
+                        throw e.toFileSystemException()
+                    }
+                }
+            return JvmFileWatcher(watchService)
+        }
+    }
+
     private inner class Poller : Thread("JvmFileWatcher.Poller-${pollerId.getAndIncrement()}") {
         init {
             isDaemon = true
@@ -243,31 +268,6 @@ internal class JvmFileWatcher private constructor(private val watchService: Watc
                 keyToFlows -= key
                 isClosed = true
             }
-        }
-    }
-
-    companion object {
-        private val EVENT_KINDS =
-            arrayOf(
-                StandardWatchEventKinds.ENTRY_CREATE,
-                StandardWatchEventKinds.ENTRY_DELETE,
-                StandardWatchEventKinds.ENTRY_MODIFY,
-            )
-
-        private val pollerId = AtomicInteger()
-
-        @Throws(CancellationException::class, IOException::class)
-        suspend operator fun invoke(): JvmFileWatcher {
-            val fileSystem = FileSystems.getDefault()
-            val watchService =
-                withContext(Dispatchers.IO) {
-                    try {
-                        fileSystem.newWatchService()
-                    } catch (e: JavaFileSystemException) {
-                        throw e.toFileSystemException()
-                    }
-                }
-            return JvmFileWatcher(watchService)
         }
     }
 }

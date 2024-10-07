@@ -209,17 +209,19 @@ internal class JvmFileWatcher private constructor(private val watchService: Watc
                                         continue
                                     }
                                     val path =
-                                        if (flowContext != null) {
-                                            // We need to match a certain context, so this is
-                                            // watching the parent directory for the file itself.
-                                            flow.file
-                                        } else {
-                                            // We don't have a context to match against, so this is
-                                            // for watching directory entries, and we should provide
-                                            // the changed entry path.
-                                            eventContext?.let {
-                                                flow.file.resolve(it.encodeToByteString())
+                                        if (eventContext != null) {
+                                            if (flowContext != null) {
+                                                // We need to match a certain context, so this is
+                                                // watching the parent directory for the file itself.
+                                                flow.file
+                                            } else {
+                                                // We don't have a context to match against, so this
+                                                // is for watching directory entries, and we should
+                                                // provide the changed entry path.
+                                                flow.file.resolve(eventContext.encodeToByteString())
                                             }
+                                        } else {
+                                            null
                                         }
                                     val event = JvmWatchFileEvent(path)
                                     flow.emit(event)

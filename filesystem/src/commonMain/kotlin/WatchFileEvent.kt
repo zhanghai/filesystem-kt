@@ -16,6 +16,15 @@
 
 package me.zhanghai.kotlin.filesystem
 
+/**
+ * An event for a change to a specific file in the file system.
+ *
+ * @see FileWatcher.watch
+ */
 public interface WatchFileEvent {
+    /**
+     * The path for the changed file, or `null` if the path is unavailable and the change may or may
+     * not have happened.
+     */
     public val file: Path?
 }

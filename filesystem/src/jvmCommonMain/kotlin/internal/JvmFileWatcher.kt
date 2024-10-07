@@ -257,12 +257,11 @@ internal class JvmFileWatcher private constructor(private val watchService: Watc
                     return
                 }
                 val flows = keyToFlows[key]!!
-                if (flows.size > 1) {
-                    return
+                flows -= this
+                if (flows.isEmpty()) {
+                    withContext(Dispatchers.IO) { key.cancel() }
+                    keyToFlows -= key
                 }
-                check(flows.single() == this)
-                withContext(Dispatchers.IO) { key.cancel() }
-                keyToFlows -= key
                 isClosed = true
             }
         }

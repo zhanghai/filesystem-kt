@@ -16,8 +16,11 @@
 
 package me.zhanghai.kotlin.filesystem
 
+import kotlin.coroutines.cancellation.CancellationException
+import kotlinx.io.IOException
 import me.zhanghai.kotlin.filesystem.io.AsyncCloseable
 
 public interface FileStore : AsyncCloseable {
+    @Throws(CancellationException::class, IOException::class)
     public suspend fun readMetadata(): FileStoreMetadata
 }

@@ -55,7 +55,7 @@ public suspend fun AsyncSink.write(source: ByteBuffer): Int {
 
 /** @see kotlinx.io.Buffer.transferFrom */
 @OptIn(UnsafeIoApi::class)
-public fun Buffer.transferFrom(source: ByteBuffer): Buffer {
+private fun Buffer.transferFrom(source: ByteBuffer): Buffer {
     val byteCount = source.remaining()
     var remaining = byteCount
 

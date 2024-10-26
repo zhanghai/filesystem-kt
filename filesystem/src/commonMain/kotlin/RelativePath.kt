@@ -234,13 +234,23 @@ private constructor(
      */
     public fun toByteString(): ByteString {
         var decodedLength = 0
+        var isFirst = true
         for (name in names) {
-            decodedLength += 1
+            if (isFirst) {
+                isFirst = false
+            } else {
+                decodedLength += 1
+            }
             decodedLength += name.size
         }
         return buildByteString(decodedLength) {
+            isFirst = true
             for (name in names) {
-                append(Path.NAME_SEPARATOR_BYTE)
+                if (isFirst) {
+                    isFirst = false
+                } else {
+                    append(Path.NAME_SEPARATOR_BYTE)
+                }
                 append(name)
             }
         }

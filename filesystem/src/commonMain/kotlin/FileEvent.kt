@@ -21,7 +21,7 @@ package me.zhanghai.kotlin.filesystem
  *
  * @see FileWatcher.watch
  */
-public interface WatchFileEvent {
+public interface FileEvent {
     /**
      * The path for the changed file, or `null` if the path is unavailable and the change may or may
      * not have happened.

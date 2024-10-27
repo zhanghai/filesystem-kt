@@ -48,15 +48,15 @@ public interface FileWatcher : AsyncCloseable {
      *
      * @param file the file to watch for changes to
      * @param options the options for watching this file
-     * @return a [flow][AsyncCloseableFlow] that emits [events][WatchFileEvent] for changes to this
-     *   file, and can be [closed][AsyncCloseableFlow.close] to stop watching
+     * @return a [flow][AsyncCloseableFlow] that emits [events][FileEvent] for changes to this file,
+     *   and can be [closed][AsyncCloseableFlow.close] to stop watching
      * @see WatchFileOption
      */
     @Throws(CancellationException::class, IOException::class)
     public suspend fun watch(
         file: Path,
         vararg options: WatchFileOption,
-    ): AsyncCloseableFlow<out WatchFileEvent>
+    ): AsyncCloseableFlow<out FileEvent>
 
     /**
      * Close this file watcher.

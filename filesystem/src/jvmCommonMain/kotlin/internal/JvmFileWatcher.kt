@@ -39,12 +39,12 @@ import kotlinx.coroutines.withContext
 import kotlinx.io.IOException
 import kotlinx.io.bytestring.encodeToByteString
 import me.zhanghai.kotlin.filesystem.BasicWatchFileOption
+import me.zhanghai.kotlin.filesystem.FileEvent
 import me.zhanghai.kotlin.filesystem.FileWatcher
 import me.zhanghai.kotlin.filesystem.LinkOption
 import me.zhanghai.kotlin.filesystem.NotDirectoryException
 import me.zhanghai.kotlin.filesystem.Path
 import me.zhanghai.kotlin.filesystem.PlatformFileSystem
-import me.zhanghai.kotlin.filesystem.WatchFileEvent
 import me.zhanghai.kotlin.filesystem.WatchFileOption
 import me.zhanghai.kotlin.filesystem.io.AsyncCloseableFlow
 import me.zhanghai.kotlin.filesystem.requireScheme
@@ -64,7 +64,7 @@ internal class JvmFileWatcher private constructor(private val watchService: Watc
     override suspend fun watch(
         file: Path,
         vararg options: WatchFileOption,
-    ): AsyncCloseableFlow<out WatchFileEvent> {
+    ): AsyncCloseableFlow<out FileEvent> {
         mutex.withLock {
             check(!isClosed) { "FileWatcher is closed" }
             file.requireScheme(PlatformFileSystem.SCHEME)
@@ -212,7 +212,8 @@ internal class JvmFileWatcher private constructor(private val watchService: Watc
                                         if (eventContext != null) {
                                             if (flowContext != null) {
                                                 // We need to match a certain context, so this is
-                                                // watching the parent directory for the file itself.
+                                                // watching the parent directory for the file
+                                                // itself.
                                                 flow.file
                                             } else {
                                                 // We don't have a context to match against, so this
@@ -223,7 +224,7 @@ internal class JvmFileWatcher private constructor(private val watchService: Watc
                                         } else {
                                             null
                                         }
-                                    val event = JvmWatchFileEvent(path)
+                                    val event = JvmFileEvent(path)
                                     flow.emit(event)
                                 }
                             }
@@ -240,16 +241,16 @@ internal class JvmFileWatcher private constructor(private val watchService: Watc
     }
 
     private inner class Flow(private val key: WatchKey, val context: String?, val file: Path) :
-        AsyncCloseableFlow<WatchFileEvent> {
-        private val flow = MutableSharedFlow<WatchFileEvent>()
+        AsyncCloseableFlow<FileEvent> {
+        private val flow = MutableSharedFlow<FileEvent>()
 
         private var isClosed = false
 
-        suspend fun emit(value: WatchFileEvent) {
+        suspend fun emit(value: FileEvent) {
             flow.emit(value)
         }
 
-        override suspend fun collect(collector: FlowCollector<WatchFileEvent>) {
+        override suspend fun collect(collector: FlowCollector<FileEvent>) {
             flow.collect(collector)
         }
 
@@ -285,4 +286,4 @@ internal fun Array<out WatchFileOption>.toWatchFileOptions(): WatchFileOptions {
     return WatchFileOptions(watchDirectoryEntries, noFollowLinks)
 }
 
-internal class JvmWatchFileEvent(override val file: Path?) : WatchFileEvent
+internal class JvmFileEvent(override val file: Path?) : FileEvent

@@ -39,13 +39,18 @@
 
 package me.zhanghai.kotlin.filesystem.io
 
+import java.io.InputStream
 import java.nio.ByteBuffer
 import kotlin.coroutines.cancellation.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.io.Buffer
 import kotlinx.io.IOException
 import kotlinx.io.InternalIoApi
 import kotlinx.io.Segment
 import kotlinx.io.UnsafeIoApi
+import kotlinx.io.checkByteCount
+import kotlinx.io.minOf
 import kotlinx.io.unsafe.UnsafeBufferOperations
 
 /** @see kotlinx.io.Source.readAtMostTo */
@@ -72,4 +77,33 @@ private fun Buffer.readAtMostTo(sink: ByteBuffer): Int {
     }
 
     return toCopy
+}
+
+/** @see kotlinx.io.asSource */
+public fun InputStream.asAsyncSource(): RawAsyncSource = InputStreamAsyncSource(this)
+
+private open class InputStreamAsyncSource(private val input: InputStream) : RawAsyncSource {
+    @OptIn(UnsafeIoApi::class)
+    override suspend fun readAtMostTo(sink: Buffer, byteCount: Long): Long =
+        withContext(Dispatchers.IO) {
+            if (byteCount == 0L) return@withContext 0L
+            checkByteCount(byteCount)
+            var readTotal = 0L
+            UnsafeBufferOperations.writeToTail(sink, 1) { data, pos, limit ->
+                val maxToCopy = minOf(byteCount, limit - pos).toInt()
+                readTotal = input.read(data, pos, maxToCopy).toLong()
+                if (readTotal == -1L) {
+                    0
+                } else {
+                    readTotal.toInt()
+                }
+            }
+            readTotal
+        }
+
+    override suspend fun close() {
+        withContext(Dispatchers.IO) { input.close() }
+    }
+
+    override fun toString() = "RawAsyncSource($input)"
 }

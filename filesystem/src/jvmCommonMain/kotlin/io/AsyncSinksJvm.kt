@@ -35,12 +35,19 @@
  * limitations under the License.
  */
 
+@file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
+
 package me.zhanghai.kotlin.filesystem.io
 
+import java.io.OutputStream
 import java.nio.ByteBuffer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.io.Buffer
 import kotlinx.io.InternalIoApi
 import kotlinx.io.UnsafeIoApi
+import kotlinx.io.checkOffsetAndCount
+import kotlinx.io.minOf
 import kotlinx.io.unsafe.UnsafeBufferOperations
 
 /** @see kotlinx.io.Sink.write */
@@ -69,4 +76,36 @@ private fun Buffer.transferFrom(source: ByteBuffer): Buffer {
     }
 
     return this
+}
+
+/** @see kotlinx.io.asSink */
+public fun OutputStream.asAsyncSink(): RawAsyncSink = OutputStreamAsyncSink(this)
+
+private open class OutputStreamAsyncSink(private val out: OutputStream) : RawAsyncSink {
+    @OptIn(UnsafeIoApi::class)
+    override suspend fun write(source: Buffer, byteCount: Long) {
+        withContext(Dispatchers.IO) {
+            checkOffsetAndCount(source.size, 0, byteCount)
+            var remaining = byteCount
+            while (remaining > 0) {
+                // kotlinx.io TODO: detect Interruption.
+                UnsafeBufferOperations.readFromHead(source) { data, pos, limit ->
+                    val toCopy = minOf(remaining, limit - pos).toInt()
+                    out.write(data, pos, toCopy)
+                    remaining -= toCopy
+                    toCopy
+                }
+            }
+        }
+    }
+
+    override suspend fun flush() {
+        withContext(Dispatchers.IO) { out.flush() }
+    }
+
+    override suspend fun close() {
+        withContext(Dispatchers.IO) { out.close() }
+    }
+
+    override fun toString() = "RawAsyncSink($out)"
 }

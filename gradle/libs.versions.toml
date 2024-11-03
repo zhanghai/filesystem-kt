@@ -6,7 +6,8 @@ android-minSdk = "21"
 dokka = "1.9.20"
 kotlin = "2.0.20"
 kotlinx-coroutines = "1.9.0"
-kotlinx-io = "0.5.4"
+# We need strictly because we are using @file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE").
+kotlinx-io = { strictly = "0.5.4" }
 nexus-publish = "2.0.0"
 
 [libraries]
